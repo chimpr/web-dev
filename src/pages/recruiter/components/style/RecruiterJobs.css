@@ -1,0 +1,68 @@
+.jobs-wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    gap: 5%;
+}
+
+.jobs-ls > h1, .jobs-rs > h1 {
+    font-size: 1.5em;
+}
+
+.jobs-scrollview {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 2%;
+    padding-bottom: 5%;
+    padding-top: 5%;
+}
+
+.jobs-ls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 1%;
+    max-width: 45vw;
+    max-height: 89vh;
+    margin: 0px !important;
+    padding-left: 2vw;
+}
+
+.jobs-rs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+.job-card {
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+    padding-top: 0px !important;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    margin-right: 2%;
+    gap: 5px;
+    height: fit-content;
+}
+
+.job-card > h1 {
+    font-size: 1.5em;
+    margin: 0px;
+}
+
+.job-card > p {
+    font-size: 1em;
+    margin: 0px;
+}
+
+.job-skill-area {
+    background-color: lightgray;
+    height: 10vh;
+    overflow-y: scroll;
+    display: flex;
+    gap: 1px;
+    flex-direction: column;
+}

@@ -1,0 +1,46 @@
+.student-sign-up {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+}
+
+.student-info {
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    height: 100%;
+    width: 100%;
+}
+
+.text-buddies {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+.s-i-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1%;
+}
+
+.s-i-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6%;
+    margin-top: 7%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+.go-back-btn {
+    justify-self: baseline;
+    align-self: start;
+    margin: 10px;
+}

@@ -1,0 +1,39 @@
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+.landing-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    margin: 0px;
+    overflow-x: hidden;
+}
+
+.landing-header {
+    flex: 1;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    z-index: 50;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+}
+
+.landing-header-nav-bar {
+    flex: 1;
+    display: flex;
+    align-self: right;
+    justify-content: right;
+    padding-right: 2%;
+    gap: 5%;
+}
+
+.landing-content {
+    flex: 10;
+    height: 100%;
+    width: 100%;
+}

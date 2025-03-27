@@ -1,0 +1,133 @@
+.student-container {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    background: white;
+}
+.profile-card {
+    flex: 0 0 400px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 2rem;
+    height: fit-content;
+}
+.right-space {
+    flex: 1;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+.student-container {
+    background-color: white;
+    padding: 2rem;
+    min-height: 100vh;
+    width: 100vw; 
+} 
+.student-title {
+    color: black;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+.student-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    border: 3px solid #0066cc;
+}
+.form-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+}
+.form-group {
+    margin-bottom: 1rem;
+}
+  
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: black;
+}
+  
+.student-input {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+  
+.name-inputs {
+    display: flex;
+    gap: 1rem;
+}
+  
+.graduation-inputs {
+    display: flex;
+    gap: 1rem;
+}
+  
+.student-textarea {
+    width: 100%;
+    height: 100px;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+  
+.student-button {
+    background-color: #0066cc;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.student-button:hover {
+    background-color: #0052a3;
+}
+.student-info {
+    display: block;
+    padding: 0.5rem 0;
+    color: black;
+    min-height: 1.2rem;
+}
+
+@media (min-width: 768px) {
+    .form-group {
+      grid-template-columns: 120px 1fr;
+      gap: 1.5rem;
+    }
+    
+    .form-group label {
+      text-align: left;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .student-container {
+      flex-direction: column;
+    }
+    
+    .profile-card {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .form-container {
+      max-width: 500px;
+    }
+    
+    .student-image {
+      max-width: 300px;
+    }
+}
+body, #root {
+    overflow-x: hidden;
+    background: white !important; 
+}

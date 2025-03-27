@@ -1,0 +1,50 @@
+.recruiter-welcome-wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+}
+
+.welcome-ls {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10vh;
+}
+
+.welcome-text-area {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 100%;
+    padding-left: 10%;
+    font-size: 1.5em;
+}
+
+.welcome-buttons {
+    display: flex;
+    width: 100%;
+    gap: 10vw;
+    justify-content: left;
+    padding-left: 10%;
+}
+
+.welcome-rs {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcome-rs > img {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+    /* background-color: rgb(240, 240, 240); */
+    margin-right: 5%;
+    padding: 5%;
+    height: 50%;
+    background-color: rgb(245, 244, 244);
+    border-radius: 10px;
+}
