@@ -127,7 +127,3 @@
       max-width: 300px;
     }
 }
-body, #root {
-    overflow-x: hidden;
-    background: white !important; 
-}

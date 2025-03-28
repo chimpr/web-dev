@@ -6,6 +6,7 @@ import RecruiterLanding, { RecruiterPageType } from "./recruiter/RecruiterLandin
 import './style/LandingRouter.css'
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import StudentProfile from "./student/StudentProfile";
 
 export default function LandingRouter() {
 
@@ -65,8 +66,12 @@ export default function LandingRouter() {
             <div className="landing-content">
                 {
                     // determine user type
-                    <RecruiterLanding page={recruiterInitialPageType} setPage={setRecruiterInitialPageType}/>
-                }
+                    (isRecruiter) 
+                    ?
+                        <RecruiterLanding page={recruiterInitialPageType} setPage={setRecruiterInitialPageType}/>
+                        :
+                        <StudentProfile/>
+                    }
             </div>
         </div>
     )
