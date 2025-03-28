@@ -52,8 +52,7 @@ export default function Login(props: any) {
                 console.log("STUDENT!!")
             }
             
-            // todo: remove me -- for testing purposes.
-
+            // todo: remove me -- for testing purposes (I'm hardcoding Recruiter)
             const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"]);
             setLoggedInUser({...user});
             navigate("/home");
