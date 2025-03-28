@@ -9,14 +9,14 @@ export enum PageType {
     SIGN_UP_STUDENT   = 2,
 }
 
-export default function MainIsland() {
+export default function MainIsland(props: any) {
 
     const [curPage, setCurPage] = useState(PageType.LOGIN);
 
     const CurrentPage = () => {
         switch(curPage) {
             case PageType.LOGIN:
-                return <Login setCurPage={setCurPage}/>
+                return <Login setLoggedInUser={props.setLoggedInUser} setCurPage={setCurPage}/>
             case PageType.SIGN_UP_RECRUITER:
                 return <><h1>Recruiter Sign Up</h1></>;
             case PageType.SIGN_UP_STUDENT:

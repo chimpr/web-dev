@@ -7,16 +7,31 @@ import StudentMonkey from './style/img/university.png';
 import { useState } from 'react';
 import {doLogin} from '../api/api';
 import { useNavigate } from 'react-router-dom';
+import './style/login.css';
+import User from '../models/User';
 
 export default function Login(props: any) {
 
     const [showPassword, setShowPassword] = useState(false);
+    const [unPwIncorr, setUnPwIncorr]     = useState(false);
+    const [emailInvalid, setEmailInvalid] = useState(false);
     const [username, setUsername]         = useState('');
     const [password, setPassword]         = useState('');
 
     const [signUpCovered, setSignUpCovered] = useState(false);
 
     const navigate = useNavigate();
+    const setLoggedInUser = props.setLoggedInUser;
+
+    const checkEmail = (un: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        setEmailInvalid(!emailRegex.test(un));
+    }
+
+    const handleSetUsername = (email: string) => {
+        checkEmail(email);
+        setUsername(email);
+    }
 
     /**
      * Performs the login operation.
@@ -25,11 +40,22 @@ export default function Login(props: any) {
     const handleLoginBtnClick = () => {
         if (username === '' || password === '')
             return;
-        doLogin(username, password).then((res) => {
-            console.log(res);
+        doLogin(username, password).then((data) => {
+            if (data["Error"] !== "") {
+                setUnPwIncorr(true);
+                return;
+            }
 
-            // add some logic to determine if login was successful, then route.
-            navigate('/home')
+            // determine if student or recruiter.
+            const isStudent = data["Role"] === "Student";
+            if (isStudent) {
+                console.log("STUDENT!!")
+            }
+            
+            // todo: remove me -- for testing purposes (I'm hardcoding Recruiter)
+            const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"]);
+            setLoggedInUser({...user});
+            navigate("/home");
         })
     }
 
@@ -50,14 +76,18 @@ export default function Login(props: any) {
                 <div className='login-area'>
                     {/* Login */}
                     <p style={{color:'black', marginBottom: '0px'}} className='header-text'>Sign In</p>
-                    <TextField onChange={(t) => setUsername(t.target.value)} required id="username-field" style={{width: '20vw'}} label="Username" />
-                    
+                    <div style={{display: "flex", flexDirection: "column"}}>
+                        <TextField onChange={(t) => handleSetUsername(t.target.value)} required id="username-field" style={{width: '20vw'}} label="Email" />
+                        <p style={{display: (emailInvalid ? "" : "none"), "color":'red', margin: '0px'}}>Invalid Email Format</p>
+                    </div>
+
                     <div style={{display: "flex", flexDirection: "column"}}>
                         <TextField onChange={(t) => setPassword(t.target.value)} required id="password-field" style={{width: '20vw'}} type={showPassword ? "" : "password"} label="Password" />
+                        <p style={{display: (unPwIncorr ? "" : "none"), color: 'red', margin: '0px'}}>Incorrect Username or Password</p>
                         <FormControlLabel label="Show Password" control={<Checkbox onChange={() => {setShowPassword(!showPassword)}}/>}/>
                     </div>
 
-                    <Button onClick={handleLoginBtnClick} variant='contained' style={{width: '20vw'}}>Login</Button>
+                    <Button disabled={username === "" || password === "" || emailInvalid} onClick={handleLoginBtnClick} variant='contained' style={{width: '20vw'}}>Login</Button>
                     
                     {/* Or Sign Up */}
                     <p>Don't have an account?</p> 
@@ -89,7 +119,7 @@ export default function Login(props: any) {
                 
                 {/* overlay */}
                 <div className={"login-side-movable-div " + (!signUpCovered ? "" : ", transform")}>
-                    <img src={BusinessMonkey}/>
+                    <img className='login-business-monkey' src={BusinessMonkey}/>
                     <div style={{textAlign: 'center'}}>
                         <p className='header-text'>Welome To The Future of Recruiting</p>
                         <p>We put the fair in career fair</p>

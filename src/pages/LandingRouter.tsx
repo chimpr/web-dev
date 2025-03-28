@@ -5,23 +5,34 @@ import Logo from "../components/logo";
 import RecruiterLanding, { RecruiterPageType } from "./recruiter/RecruiterLanding";
 import './style/LandingRouter.css'
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import StudentProfile from "./student/StudentProfile";
+import User, { Role } from "../models/User";
 
-export default function LandingRouter() {
+export default function LandingRouter(props: any) {
 
     // custom button styling
     const NavBtnStyle = {color: 'black'};
     const LogOutBtnStyle = { backgroundColor: 'black', color: 'white', '&:hover': { backgroundColor: '#141414' }};
 
-    const isRecruiter = true;
-
+    // handle props.
+    const loggedInUser    = props.loggedInUser;
+    const setLoggedInUser = props.setLoggedInUser;
     const navigate = useNavigate();
 
     const LogOutBtnClick = () => {
         // navigate to login
         navigate('/');
+        setLoggedInUser(null);
     }
 
+    // runs when page loads.
+    useEffect(() => {
+        // navigate back to login if user is invalid.
+        if (loggedInUser === null) {
+            navigate("/");
+        }
+    }, [])
 
     // recruiter stuff.
     const [recruiterInitialPageType, setRecruiterInitialPageType] = useState(RecruiterPageType.WELCOME);
@@ -40,7 +51,7 @@ export default function LandingRouter() {
                 <div className="landing-header-nav-bar">
                     <Button sx={NavBtnStyle}>About Us</Button>
 
-                    {isRecruiter 
+                    {loggedInUser?.role === Role.RECRUITER 
                         ? 
                             <>
                                 <Button onClick={handleJobsBtnClick}   sx={NavBtnStyle}>Jobs</Button>
@@ -65,8 +76,12 @@ export default function LandingRouter() {
             <div className="landing-content">
                 {
                     // determine user type
-                    <RecruiterLanding page={recruiterInitialPageType} setPage={setRecruiterInitialPageType}/>
-                }
+                    (loggedInUser?.role === Role.RECRUITER) 
+                    ?
+                        <RecruiterLanding loggedInUser={loggedInUser} page={recruiterInitialPageType} setPage={setRecruiterInitialPageType}/>
+                        :
+                        <StudentProfile/>
+                    }
             </div>
         </div>
     )

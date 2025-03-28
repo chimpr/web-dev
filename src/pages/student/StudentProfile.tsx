@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/student.css';
-import StudentImage from '../images/Studentmonkey.png';
+import './styles/student.css';
+import StudentImage from './images/Studentmonkey.png';
 
 interface StudentData {
   FirstName: string;
