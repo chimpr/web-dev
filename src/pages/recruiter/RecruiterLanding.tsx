@@ -13,12 +13,13 @@ export default function RecruiterLanding(props: any) {
 
     const curPage    = props.page;
     const setCurPage = props.setPage;
+    console.log(props.loggedInUser?.firstName);
     
     switch(curPage) {
         case RecruiterPageType.WELCOME:
-            return <RecruiterWelcome setCurPage={setCurPage}/>
+            return <RecruiterWelcome loggedInUser={props.loggedInUser} setCurPage={setCurPage}/>
         case RecruiterPageType.ABOUT:
-            return <RecruiterWelcome setCurPage={setCurPage}/>
+            return <RecruiterWelcome loggedInUser={props.loggedInUser} setCurPage={setCurPage}/>
         case RecruiterPageType.JOBS:
             return <RecruiterJobs setCurPage={setCurPage}/>
         case RecruiterPageType.EVENTS:

@@ -8,6 +8,7 @@ import { useState } from 'react';
 import {doLogin} from '../api/api';
 import { useNavigate } from 'react-router-dom';
 import './style/login.css';
+import User from '../models/User';
 
 export default function Login(props: any) {
 
@@ -20,6 +21,7 @@ export default function Login(props: any) {
     const [signUpCovered, setSignUpCovered] = useState(false);
 
     const navigate = useNavigate();
+    const setLoggedInUser = props.setLoggedInUser;
 
     const checkEmail = (un: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -49,6 +51,11 @@ export default function Login(props: any) {
             if (isStudent) {
                 console.log("STUDENT!!")
             }
+            
+            // todo: remove me -- for testing purposes.
+
+            const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"]);
+            setLoggedInUser({...user});
             navigate("/home");
         })
     }
