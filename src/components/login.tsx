@@ -53,7 +53,7 @@ export default function Login(props: any) {
             }
             
             // todo: remove me -- for testing purposes (I'm hardcoding Recruiter)
-            const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"]);
+            const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"], "test@gmail.com");
             setLoggedInUser({...user});
             navigate("/home");
         })

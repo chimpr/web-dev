@@ -2,6 +2,7 @@ import './style/style.css';
 import Login from "./components/login";
 import { useState } from 'react';
 import StudentSignUp from './components/StudentSignUp';
+import RecruiterSignUp from './components/RecruiterSignUp';
 
 export enum PageType {
     LOGIN             = 0,
@@ -18,7 +19,7 @@ export default function MainIsland(props: any) {
             case PageType.LOGIN:
                 return <Login setLoggedInUser={props.setLoggedInUser} setCurPage={setCurPage}/>
             case PageType.SIGN_UP_RECRUITER:
-                return <><h1>Recruiter Sign Up</h1></>;
+                return <RecruiterSignUp setCurPage={setCurPage}/>
             case PageType.SIGN_UP_STUDENT:
                 return <StudentSignUp setCurPage={setCurPage}/>
             default:
