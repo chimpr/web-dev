@@ -1,0 +1,18 @@
+.recruiter-sign-up {
+    display: flex;
+    flex-direction: column;
+    width: fill;
+    height: fill;
+}
+
+.recruiter-sign-up-content {
+    padding: 1em;
+}
+
+.recruiter-sign-up-content > h1 {
+    font-size: 2em;
+}
+
+.recruiter-sign-up-content > p {
+    font-size: 1em;
+}
