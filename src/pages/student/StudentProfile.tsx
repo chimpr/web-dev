@@ -4,6 +4,17 @@ import StudentImage from '../images/Studentmonkey.png';
 import Student from '../../models/Student';
 import { Role } from '../../models/User';
 
+
+interface StudentData {
+  FirstName: string;
+  LastName: string;
+  School: string;
+  Grad_Semester: string;
+  Grad_Year: number;
+  Bio: string;
+  Email: string;
+}
+
 const StudentProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [studentData, setStudentData] = useState<Student>({
