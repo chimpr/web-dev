@@ -57,7 +57,6 @@ const StudentProfile: React.FC = () => {
         <img src={StudentImage} alt="Student Portal" className="student-image" />
   
         <div className="form-container">
-          {/* Keep all existing form groups */}
           <div className="form-group">
           <label>Name:</label>
           {isEditing ? (
