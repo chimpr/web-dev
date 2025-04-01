@@ -1,27 +1,44 @@
+import { useState } from "react";
 import { Button } from "@mui/material";
 
-export default function InputFileUpload(props: any) {
-    const handleFileChange = (event: any) => {
-        const file = event.target.files[0];
-        console.log(file);
-        // Handle the file upload logic here
-    };
+interface FileUploadProps {
+  id: string;
+  text: string;
+  onUpload: (file: File) => void;
+}
 
-    return (
-        <div>
-            <input
-                accept={props.FileType}
-                style={{ display: 'none' }}
-                id={props.id}
-                type="file"
-                onChange={handleFileChange}
-            />
-            <label htmlFor={props.id}>
-                <Button variant="contained" component="span">
-                    {props.text}
-                </Button>
-            </label>
-        </div>
-    );
+export default function FileUpload({ id, text, onUpload }: FileUploadProps) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     
+    if (file) {
+      if (file.type !== "application/pdf") {
+        alert("Only PDF files are allowed!");
+        return;
+      }
+
+      setSelectedFile(file);
+      onUpload(file);
+    }
+  };
+
+  return (
+    <div>
+      <input
+        accept="application/pdf"
+        style={{ display: "none" }}
+        id={id}
+        type="file"
+        onChange={handleFileChange}
+      />
+      <label htmlFor={id}>
+        <Button variant="contained" component="span">
+          {text}
+        </Button>
+      </label>
+      {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+    </div>
+  );
 }

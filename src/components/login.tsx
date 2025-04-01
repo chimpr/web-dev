@@ -121,7 +121,7 @@ export default function Login(props: any) {
                 <div className={"login-side-movable-div " + (!signUpCovered ? "" : ", transform")}>
                     <img className='login-business-monkey' src={BusinessMonkey}/>
                     <div style={{textAlign: 'center'}}>
-                        <p className='header-text'>Welome To The Future of Recruiting</p>
+                        <p className='header-text'>Welcome To The Future of Recruiting</p>
                         <p>We put the fair in career fair</p>
                     </div>
                 </div>

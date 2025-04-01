@@ -6,12 +6,10 @@ import axios, { AxiosError } from 'axios';
 
 const baseApiURL = 'http://localhost:5001/api/';
 
-const handleError = (msg: String) => {
-    const res = {
-        "Error" : msg
-    }
-    return res;
-} 
+const handleError = (msg: string): ApiResponse => ({
+    Error: msg
+  });
+
 
 const baseAPIPostCall = async (data: any, path: string) => {
     try {
@@ -55,3 +53,37 @@ export const signUpRecruiter = async (linkedIn: string, company: string, firstNa
     };
     return await baseAPIPostCall(data, "recruiter/signup");
 }
+
+interface ApiResponse<T = any> {data?: T; Error?: string;}
+
+export const signUpStudent = async (school: string, gradSemester: string, gradYear: number, bio: string, firstName: string, lastName: string, email: string,password: string) => {
+    const data = {
+      School: school,
+      Grad_Semester: gradSemester,
+      Grad_Year: gradYear,
+      Bio: bio,
+      FirstName: firstName,
+      LastName: lastName,
+      Email: email,
+      Password: password
+    };
+    return await baseAPIPostCall(data, "student/signup");
+  };
+
+export const uploadResume = async (file: File, userId: string) => {
+    try {
+      const formData = new FormData();
+      formData.append('resume', file);
+      formData.append('userId', userId);
+  
+      const response = await axios.post(baseApiURL + "upload-resume", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      return { data: response.data };
+    } catch (err: any) {
+      return handleError(err.response?.data?.error || err.message);
+    }
+};
