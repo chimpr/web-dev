@@ -73,7 +73,7 @@ const StudentProfile: React.FC = () => {
               />
             </div>
           ) : (
-            <span className="student-info">{`${studentData.FirstName} ${studentData.LastName}`}</span>
+            <span className="student-infoRes">{`${studentData.FirstName} ${studentData.LastName}`}</span>
           )}
         </div>
         <div className="form-group">

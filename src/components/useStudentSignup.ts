@@ -66,7 +66,7 @@ export default function useStudentSignUp(setCurPage: (page: PageType) => void): 
     }
 
     try {
-        const signupResponse = await signUpStudent(
+      const signupResponse = await signUpStudent(
           school,
           gradSemester,
           parseInt(gradYear),
@@ -75,25 +75,24 @@ export default function useStudentSignUp(setCurPage: (page: PageType) => void): 
           lastName,
           email,
           password
-        );
-  
-        if (signupResponse.Error || !signupResponse.data?.ID) {
+      );
+
+      if (signupResponse.Error || !signupResponse.ID) {
           throw new Error(signupResponse.Error || 'Failed to create student account');
-        }
-  
-        if (!resumeFile) {
-          throw new Error('No resume file selected');
-        }
-  
-        const uploadResponse = await uploadResume(resumeFile, signupResponse.data.ID);
-        if (uploadResponse.Error) {
-          throw new Error(uploadResponse.Error);
-        }
-  
-        setCurPage(PageType.LOGIN);
-      } catch (err: any) {
-        setError(err.message || 'Registration failed');
       }
+
+      if (!resumeFile) {
+          throw new Error('No resume file selected');
+      }
+      const uploadResponse = await uploadResume(resumeFile, signupResponse.ID);
+      if (uploadResponse.Error) {
+          throw new Error(uploadResponse.Error);
+      }
+
+      setCurPage(PageType.LOGIN);
+    } catch (err: any) {
+      setError(err.message || 'Registration failed');
+    }
   };
 
   return {

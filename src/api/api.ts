@@ -11,21 +11,30 @@ const handleError = (msg: string): ApiResponse => ({
   });
 
 
-const baseAPIPostCall = async (data: any, path: string) => {
+  const baseAPIPostCall = async (data: any, path: string) => {
     try {
+        console.log("llegue");
         const response = await axios.post(baseApiURL + path, data);
-        console.log("Response status:", response.status); // Log the response status code
+        console.log("Response status:", response.status);
 
         if (response.status < 200 || response.status >= 300) {
-            return handleError(response.data["error"]);
+            return handleError(response.data.error || 'Unknown error occurred');
         }
         return response.data;
     } catch (err: any) {
         if (err.response) {
-            return handleError(err.response.data["error"]);
+            // Non-2xx status response
+            const errorMessage = err.response.data.error || 'Unknown error occurred';
+            return handleError(errorMessage);
+        } else if (err.request) {
+            // No response
+            return handleError('Network error. Please check your connection.');
+        } else {
+            // Setup error
+            return handleError(err.message || 'An unexpected error occurred');
         }
     }
-}
+};
 
 /**
  * Logs user in.

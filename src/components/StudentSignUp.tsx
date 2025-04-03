@@ -1,4 +1,4 @@
-import './style/student-sign-up.css';
+import './style/student-new.css';
 import { Button, TextField, MenuItem } from "@mui/material";
 import Logo from "./logo";
 import { PageType } from '../MainIsland';
@@ -41,9 +41,9 @@ export default function StudentSignUp(props: any) {
   return (
     <div className='student-sign-up'>
       <Logo/>
+      <p className="header-text" style={{color: 'black', margin: '40px 0 0 20px'}}>Student Sign Up</p>
       <div className='student-info'>
         <div className="s-i-left">
-          <p className="header-text" style={{color: 'black'}}>Student Sign Up</p>
           <p>General Information</p>
           <div className='text-buddies'>
             <TextField 
@@ -64,7 +64,8 @@ export default function StudentSignUp(props: any) {
           <p>Education Information</p>
           <TextField 
             required 
-            fullWidth 
+            fullWidth
+            style={{margin: '0 0 12px 0'}} 
             label="School"
             value={school}
             onChange={(e) => setSchool(e.target.value)}
@@ -96,15 +97,16 @@ export default function StudentSignUp(props: any) {
             />
           </div>
           <p>Account Information</p>
-          <div className='text-buddies'>
-            <TextField
+          <TextField
               required
-              style={{width: '50%'}}
+              fullWidth
+              style={{margin: '0 0 12px 0'}} 
               label="Email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+          <div className='text-buddies'>
             <TextField
               required
               style={{width: '50%'}}
@@ -113,20 +115,25 @@ export default function StudentSignUp(props: any) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-          </div>
-          <TextField
+            <TextField
             required
             fullWidth
+            style={{width: '50%'}}
             label="Confirm Password"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
+          </div>
+          
         </div>
 
         <div className='s-i-right'>
+          <div>
           <p>{`Biography (${bioCharCount}/${MAX_BIO_CHARS})`}</p>
           <TextField
+            fullWidth
+            style={{margin: '0 0 12px 0'}} 
             label="Bio (Optional)"
             multiline
             variant="outlined"
@@ -136,6 +143,7 @@ export default function StudentSignUp(props: any) {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
           />
+          </div>
           <InputFileUpload 
               id="resume-upload" 
               text="Upload Resume" 
@@ -145,14 +153,14 @@ export default function StudentSignUp(props: any) {
           {error && <div className="error-message">{error}</div>}
           <Button 
             variant='contained' 
-            style={{width: '100%'}}
+            style={{width: '100%', margin: '12px 0 0 0'}}
             onClick={handleRegister}
           >
             Register
           </Button>
         </div>
       </div>
-      <Button onClick={handleGoBackBtnClick} className='go-back-btn'>Go Back</Button>
+      <Button style={{margin: '25px'}} onClick={handleGoBackBtnClick} className='go-back-btn'>Go Back</Button>
     </div>
   );
 }
