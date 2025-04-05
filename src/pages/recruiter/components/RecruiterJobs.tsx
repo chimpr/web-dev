@@ -4,15 +4,19 @@ import Job from '../models/Job';
 import JobWidget from './JobWidget';
 import { Button } from '@mui/material';
 import CandidateWidget from './CandidateWidget';
+import PopupOverlay from '../../../components/PopupOverlay';
+import RecruiterCreateJob from './RecruiterCreateJob';
 
 export default function RecruiterJobs(props: any) {
 
     const [jobList, setJobList] = useState<Array<Job>>([]);
     const [selectedJob, setSelectedJob] = useState<Job>();
+    const [createJobVisible, setCreateJobVisible] = useState(false);
 
     const candidates = ["Jon","Josh","Jack","Jayman"]
     // example data is used for now.
     useEffect(() => {
+        
         const jList = new Array<Job>();
         const skills = new Array<string>();
         skills.push("C#", "C++");
@@ -25,10 +29,11 @@ export default function RecruiterJobs(props: any) {
     return (<div className="jobs-wrapper">
                 <div className="jobs-ls">
                     <h1>Current Jobs</h1>
+                    <Button onClick={() => setCreateJobVisible(true)} sx={{width: 'fit-content'}} variant='contained'>Create Job</Button>
                     <div className="jobs-scrollview">
                             {
                                 jobList.map((job, idx) => (
-                                        <JobWidget job={job} selected={job == selectedJob} setSelectedJob={setSelectedJob}/>
+                                    <JobWidget job={job} selected={job == selectedJob} setSelectedJob={setSelectedJob}/>
                                 ))
                             }
                     </div>
@@ -66,5 +71,6 @@ export default function RecruiterJobs(props: any) {
                         </>
                     }
                 </div>
+                <PopupOverlay visible={createJobVisible} content={<RecruiterCreateJob loggedInUser={props.loggedInUser} setCreateJobVisible={setCreateJobVisible}/>}/>
             </div>);
 }

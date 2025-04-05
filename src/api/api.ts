@@ -6,6 +6,13 @@ import axios, { AxiosError } from 'axios';
 
 const baseApiURL = 'http://localhost:5001/api/';
 
+// Authorization
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('Token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+};
+  
+
 const handleError = (msg: String) => {
     const res = {
         "Error" : msg
@@ -15,7 +22,12 @@ const handleError = (msg: String) => {
 
 const baseAPIPostCall = async (data: any, path: string) => {
     try {
-        const response = await axios.post(baseApiURL + path, data);
+        const response = await axios.post(baseApiURL + path, data, {
+                headers: {
+                    ...getAuthHeaders(),
+                    'Content-Type': 'application/json',
+                },
+            });
         console.log("Response status:", response.status); // Log the response status code
 
         if (response.status < 200 || response.status >= 300) {
@@ -54,4 +66,14 @@ export const signUpRecruiter = async (linkedIn: string, company: string, firstNa
         "Password" : password
     };
     return await baseAPIPostCall(data, "recruiter/signup");
+}
+
+export const createJob = async (title: string, skills: string[], type: string, recruiterID: string) => {
+    const data = {
+        "Title"         : title,
+        "Skills"        : skills,
+        "Type"          : type,
+        "Recruiter_ID"  : recruiterID
+    };
+    return await baseAPIPostCall(data, "jobs/create");
 }

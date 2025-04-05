@@ -1,0 +1,21 @@
+.create-job-content {
+    display: flex;
+    flex-direction: column;
+    height: fill;
+    width: fill;
+}
+
+.create-job-text-fields {
+    flex: 5;
+    display: flex;
+    gap: 1em;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.create-job-button-area {
+    flex: 0.5;
+    display: flex;
+    width: fill;
+    gap: 50vw;
+}

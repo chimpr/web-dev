@@ -16,14 +16,20 @@ export default function LandingRouter(props: any) {
     const LogOutBtnStyle = { backgroundColor: 'black', color: 'white', '&:hover': { backgroundColor: '#141414' }};
 
     // handle props.
-    const loggedInUser    = props.loggedInUser;
-    const setLoggedInUser = props.setLoggedInUser;
+    const [loggedInUser,setLoggedInUser] = useState<User | null>(props.loggedInUser)
     const navigate = useNavigate();
 
     const LogOutBtnClick = () => {
         // navigate to login
         navigate('/');
         setLoggedInUser(null);
+    }
+
+    // shared stuff
+    const handleHomeBtnClicked = () => {
+        if(loggedInUser?.role === Role.RECRUITER) {
+            setRecruiterInitialPageType(RecruiterPageType.ABOUT)
+        }
     }
 
     // runs when page loads.
@@ -49,7 +55,7 @@ export default function LandingRouter(props: any) {
             <div className="landing-header">
                 <Logo/>
                 <div className="landing-header-nav-bar">
-                    <Button sx={NavBtnStyle}>About Us</Button>
+                    <Button onClick={handleHomeBtnClicked} sx={NavBtnStyle}>Home</Button>
 
                     {loggedInUser?.role === Role.RECRUITER 
                         ? 

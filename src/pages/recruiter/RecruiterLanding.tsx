@@ -21,7 +21,7 @@ export default function RecruiterLanding(props: any) {
         case RecruiterPageType.ABOUT:
             return <RecruiterWelcome loggedInUser={props.loggedInUser} setCurPage={setCurPage}/>
         case RecruiterPageType.JOBS:
-            return <RecruiterJobs setCurPage={setCurPage}/>
+            return <RecruiterJobs loggedInUser={props.loggedInUser} setCurPage={setCurPage}/>
         case RecruiterPageType.EVENTS:
             return <><h1>Events</h1></>;
         default:

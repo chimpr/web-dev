@@ -1,0 +1,25 @@
+.popup-blur-background {
+    position: absolute;
+    display: flex;
+    width: fill;
+    height: fill;
+    background-color: transparent;
+    backdrop-filter: blur(10px);
+    transition: 0.5s;
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-content {
+    background-color: white;
+    height: 50vh;
+    width: 70vw;
+    border-radius: 10px;
+    padding: 1em;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.popup-content > h1 {
+    font-size: 2em;
+}

@@ -45,15 +45,10 @@ export default function Login(props: any) {
                 setUnPwIncorr(true);
                 return;
             }
-
-            // determine if student or recruiter.
-            const isStudent = data["Role"] === "Student";
-            if (isStudent) {
-                console.log("STUDENT!!")
-            }
-            
-            // todo: remove me -- for testing purposes (I'm hardcoding Recruiter)
+            console.log(data);
             const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"], "test@gmail.com");
+            // store token.
+            localStorage.setItem('Token', data["Token"]); 
             setLoggedInUser({...user});
             navigate("/home");
         })
