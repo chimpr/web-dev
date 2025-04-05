@@ -6,6 +6,7 @@ import { Button } from '@mui/material';
 import CandidateWidget from './CandidateWidget';
 import PopupOverlay from '../../../components/PopupOverlay';
 import RecruiterCreateJob from './RecruiterCreateJob';
+import { getJobs } from '../../../api/api';
 
 export default function RecruiterJobs(props: any) {
 
@@ -16,15 +17,24 @@ export default function RecruiterJobs(props: any) {
     const candidates = ["Jon","Josh","Jack","Jayman"]
     // example data is used for now.
     useEffect(() => {
-        
+      updateJobs();
+    }, [createJobVisible === false]);
+
+    const updateJobs = () => {
         const jList = new Array<Job>();
-        const skills = new Array<string>();
-        skills.push("C#", "C++");
-        for (var i = 0; i < 10; i++) {
-            jList.push(new Job(String(i), "Job " + i, "This is a job and an example of this job is xyz and ya ya ya ", skills));
-        }
-        setJobList([...jList]);
-    }, []);
+        getJobs(props.loggedInUser).then((res) => {
+            if (res['Error'].trim() !== '') {
+                console.log("Error while getting jobs: " + res['Error']);
+                return;
+            }
+            const jobs = res.jobs;
+            jobs.forEach((job: any) => {
+                jList.push(new Job(job['_id'], job['Title'], 'Empty', job['Skills']));
+            });
+        }).finally(() => {
+            setJobList([...jList]);
+        });
+    }
 
     return (<div className="jobs-wrapper">
                 <div className="jobs-ls">

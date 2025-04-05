@@ -3,6 +3,7 @@
  */
 
 import axios, { AxiosError } from 'axios';
+import User from '../models/User';
 
 const baseApiURL = 'http://localhost:5001/api/';
 
@@ -11,7 +12,6 @@ const getAuthHeaders = () => {
     const token = localStorage.getItem('Token');
     return token ? { Authorization: `Bearer ${token}` } : {};
 };
-  
 
 const handleError = (msg: String) => {
     const res = {
@@ -23,6 +23,27 @@ const handleError = (msg: String) => {
 const baseAPIPostCall = async (data: any, path: string) => {
     try {
         const response = await axios.post(baseApiURL + path, data, {
+                headers: {
+                    ...getAuthHeaders(),
+                    'Content-Type': 'application/json',
+                },
+            });
+        console.log("Response status:", response.status); // Log the response status code
+
+        if (response.status < 200 || response.status >= 300) {
+            return handleError(response.data["error"]);
+        }
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return handleError(err.response.data["error"]);
+        }
+    }
+}
+
+const baseAPIGetCall = async (path: string) => {
+    try {
+        const response = await axios.get(baseApiURL + path, {
                 headers: {
                     ...getAuthHeaders(),
                     'Content-Type': 'application/json',
@@ -76,4 +97,12 @@ export const createJob = async (title: string, skills: string[], type: string, r
         "Recruiter_ID"  : recruiterID
     };
     return await baseAPIPostCall(data, "jobs/create");
+}
+
+/**
+ * Gets the jobs from a recruiter.
+ * @param user Logged in user
+ */
+export const getJobs = async (user: User) => {
+    return await(baseAPIGetCall("jobs/list/" + user.uid));
 }
