@@ -9,6 +9,7 @@ import {doLogin} from '../api/api';
 import { useNavigate } from 'react-router-dom';
 import './style/login.css';
 import User from '../models/User';
+import Student from '../models/Student';
 
 export default function Login(props: any) {
 
@@ -47,15 +48,26 @@ export default function Login(props: any) {
             }
 
             // determine if student or recruiter.
-            const isStudent = data["Role"] === "Student";
-            if (isStudent) {
-                console.log("STUDENT!!")
+            if (data.Role === "Student") {
+                const student = new Student(
+                    data.ID,
+                    data.FirstName,
+                    data.LastName,
+                    data.School || "",
+                    data.Grad_Semester || "",
+                    data.Grad_Year || 0,
+                    data.Bio || "",
+                    data.Email
+                );
+                
+                props.setLoggedInUser(student);
+                navigate("/home"); 
             }
             
-            // todo: remove me -- for testing purposes (I'm hardcoding Recruiter)
-            const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"], "test@gmail.com");
-            setLoggedInUser({...user});
-            navigate("/home");
+            // // todo: remove me -- for testing purposes (I'm hardcoding Recruiter)
+            // const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"], "test@gmail.com");
+            // setLoggedInUser({...user});
+            // navigate("/home");
         })
     }
 

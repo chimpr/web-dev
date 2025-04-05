@@ -13,7 +13,6 @@ const handleError = (msg: string): ApiResponse => ({
 
   const baseAPIPostCall = async (data: any, path: string) => {
     try {
-        console.log("llegue");
         const response = await axios.post(baseApiURL + path, data);
         console.log("Response status:", response.status);
 
@@ -91,6 +90,24 @@ export const uploadResume = async (file: File, userId: string) => {
         }
       });
       
+      return { data: response.data };
+    } catch (err: any) {
+      return handleError(err.response?.data?.error || err.message);
+    }
+};
+
+export const getStudent = async (id: string): Promise<ApiResponse> => {
+    try {
+      const response = await axios.get(`${baseApiURL}student/${id}`);
+      return { data: response.data };
+    } catch (err: any) {
+      return handleError(err.response?.data?.error || err.message);
+    }
+  };
+  
+export const updateStudent = async (data: any): Promise<ApiResponse> => {
+    try {
+      const response = await axios.put(`${baseApiURL}student/update`, data);
       return { data: response.data };
     } catch (err: any) {
       return handleError(err.response?.data?.error || err.message);
