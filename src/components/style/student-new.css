@@ -1,0 +1,46 @@
+.student-sign-up {
+    /* border: 5px solid blue; */
+    width: 100%;
+}
+
+/* .sfields{
+    display: inline-block;
+    margin: 5px;
+
+} */
+
+.student-info {
+    /* border: 5px solid red; */
+    display: flex;
+    justify-content: space-around;
+    margin: 0 20px 0 20px;
+}
+
+.text-buddies {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.s-i-left {
+    /* border: 6px solid black; */
+    width: 50%;
+    margin-right: 2%;
+}
+
+.s-i-right {
+    /* border: 6px solid black; */
+    width: 50%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.go-back-btn {
+    justify-self: baseline;
+    align-self: start;
+    margin: 10px;
+}
