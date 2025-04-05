@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import './style/RecruiterJobs.css';
 import Job from '../models/Job';
 import JobWidget from './JobWidget';
-import { Button } from '@mui/material';
+import { Button, selectClasses } from '@mui/material';
 import CandidateWidget from './CandidateWidget';
 import PopupOverlay from '../../../components/PopupOverlay';
 import RecruiterCreateJob from './RecruiterCreateJob';
 import { getJobs } from '../../../api/api';
+import JobSkillsWidget from './JobSkillsWidget';
 
 export default function RecruiterJobs(props: any) {
 
@@ -59,11 +60,7 @@ export default function RecruiterJobs(props: any) {
                                 <p>{selectedJob.description}</p>
                                 <p style={{fontWeight: "bold"}}>Skills</p>
                                 <div className='job-skill-area'>
-                                    {
-                                        selectedJob.skills.map((skill, idx) => (
-                                            <p style={{ width: "fit-content", padding: "5px", backgroundColor: "black", color: "white"}}>{skill}</p>
-                                        ))
-                                    }
+                                    <JobSkillsWidget skills={selectedJob.skills} skillsEditable={false}/>
                                 </div>
                                 <Button  variant='contained'>Edit</Button>
                                 <Button sx={{backgroundColor: 'red'}}variant='contained'>Delete</Button>

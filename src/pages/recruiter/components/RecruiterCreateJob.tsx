@@ -30,26 +30,32 @@ export default function RecruiterCreateJob(props: any) {
                 alert("Error: " + res['Error']);
                 return;
             }
-
-            // clear out fields.
-            setJobTitle('');
-            setSkills([]);
-            setDescription('');
-            setBusy(false);
+            clearOutFields();
             props.setCreateJobVisible(false);
         });
     }
 
+    const clearOutFields = () => {
+        // clear out fields.
+        setJobTitle('');
+        setSkills([]);
+        setDescription('');
+        setType('Internship')
+        setBusy(false);
+    }
+
     // close window.
     const handleCancelBtnClick = () => {
+        clearOutFields();
         props.setCreateJobVisible(false);
+        
     }
 
     return <div className='create-job-content'>
                 <div className='create-job-text-fields'>
                     <h1>Create Job</h1>
                     <div className='text-buddies'>
-                        <TextField onChange={(t) => setJobTitle(t.target.value)} required sx={{width: '50vw'}} label="Job Title"/>
+                        <TextField value={jobTitle} onChange={(t) => setJobTitle(t.target.value)} required sx={{width: '50vw'}} label="Job Title"/>
                         <FormControl fullWidth>
                             <InputLabel required id="job-type-select-label">Job Type</InputLabel>
                             <Select
@@ -66,7 +72,7 @@ export default function RecruiterCreateJob(props: any) {
                         </FormControl>
                     </div>
                     <JobSkillsWidget skills={skills} setSkills={setSkills} skillsEditable={true}/>
-                    <TextField onChange={(t) => setDescription(t.target.value)} multiline rows={2} required label="Job Description"></TextField>
+                    <TextField value={description} onChange={(t) => setDescription(t.target.value)} multiline rows={2} required label="Job Description"></TextField>
                 </div>
                 <div className='create-job-button-area'>
                     <Button onClick={handleCancelBtnClick}>Cancel</Button>

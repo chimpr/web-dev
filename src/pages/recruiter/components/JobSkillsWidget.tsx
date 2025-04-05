@@ -11,7 +11,8 @@ export default function JobSkillsWidget(props: any) {
     const [skillText, setSkillText] = useState('');
 
     useEffect(() => {
-        props.setSkills(skills);
+        if (skillsEditable)
+            props.setSkills(skills);
     }, [skills])
 
     const handleAddSkillBtnClick = () => {
@@ -49,7 +50,7 @@ export default function JobSkillsWidget(props: any) {
                 <p style={{color: 'red', display: showSkillExists ? "" : "none", alignSelf: 'start', fontSize:'10px'}}>Skill already exists!</p>
                 <div className="job-skills-area">
                 {
-                    skills.map((skill, idx) => (
+                    props.skills.map((skill: string, idx: any) => (
                         Skill(skill,idx)
                     ))
                 }
