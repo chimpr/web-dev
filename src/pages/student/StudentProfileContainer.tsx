@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getStudent, updateStudent } from '../../api/api';
+import { getStudent, updateStudent, getResume } from '../../api/api';
 import StudentProfileView from './StudentProfileView';
 import Student from '../../models/Student';
 import { Role } from '../../models/User';
@@ -19,14 +19,17 @@ const StudentProfileContainer: React.FC<StudentProfileContainerProps> = ({ userI
         gradSemester: '',
         gradYear: 0,
         bio: '',
-        email: ''
+        email: '',
+        jobPerformance: [0, "No reviews yet"]
     });
+    
+    const [resumeUrl, setResumeUrl] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchStudentData = async () => {
-            const response = await getStudent(userId);
-            if (response.data) {
-                const apiData = response.data;
+        const fetchData = async () => {
+            const studentResponse = await getStudent(userId);
+            if (studentResponse.data) {
+                const apiData = studentResponse.data;
                 setStudentData(new Student(
                     apiData._id,
                     apiData.FirstName,
@@ -35,12 +38,22 @@ const StudentProfileContainer: React.FC<StudentProfileContainerProps> = ({ userI
                     apiData.Grad_Semester,
                     apiData.Grad_Year,
                     apiData.Bio,
-                    apiData.Email
+                    apiData.Email,
+                    apiData.Job_Performance || [0, "No reviews yet"]
                 ));
+            }
+
+            const resumeResponse = await getResume(userId);
+            if (resumeResponse.data?.downloadUrl) {
+                const fileName = resumeResponse.data.downloadUrl.includes('/') 
+                    ? resumeResponse.data.downloadUrl.split('/').pop()
+                    : resumeResponse.data.downloadUrl;
+                
+                setResumeUrl(`/api/resumes/${fileName}`);
             }
         };
         
-        fetchStudentData();
+        fetchData();
     }, [userId]);
 
     const handleSave = async () => {
@@ -67,6 +80,8 @@ const StudentProfileContainer: React.FC<StudentProfileContainerProps> = ({ userI
             onEditToggle={() => setIsEditing(!isEditing)}
             onSave={handleSave}
             onDataChange={setStudentData}
+            resumeUrl={resumeUrl || undefined}
+            setResumeUrl={setResumeUrl} 
         />
     );
 };

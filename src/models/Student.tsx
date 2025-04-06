@@ -6,6 +6,7 @@ export default class Student extends User {
   public gradYear: number;
   public bio: string;
   public email: string;
+  public jobPerformance: [number, string];
 
   constructor(
     uid: string,
@@ -15,13 +16,15 @@ export default class Student extends User {
     gradSemester: string,
     gradYear: number,
     bio: string,
-    email: string
+    email: string,
+    jobPerformance: [number, string] = [0, "No reviews yet"]
   ) {
-    super(uid, "Student", firstName, lastName); 
+    super(uid, "Student", firstName, lastName);
     this.school = school;
     this.gradSemester = gradSemester;
     this.gradYear = gradYear;
     this.bio = bio;
     this.email = email;
+    this.jobPerformance = jobPerformance;
   }
 }

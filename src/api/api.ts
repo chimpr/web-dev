@@ -113,3 +113,12 @@ export const updateStudent = async (data: any): Promise<ApiResponse> => {
       return handleError(err.response?.data?.error || err.message);
     }
 };
+
+export const getResume = async (userId: string): Promise<ApiResponse> => {
+  try {
+    const response = await axios.get(`${baseApiURL}resumes/${userId}`);
+    return { data: response.data };
+  } catch (err: any) {
+    return handleError(err.response?.data?.error || err.message);
+  }
+};
