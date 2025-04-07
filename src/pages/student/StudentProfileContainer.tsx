@@ -4,11 +4,11 @@ import StudentProfileView from './StudentProfileView';
 import Student from '../../models/Student';
 import { Role } from '../../models/User';
 
-interface StudentProfileContainerProps {
-    userId: string;
-}
+// interface StudentProfileContainerProps {
+//     userId: string;
+// }
 
-const StudentProfileContainer: React.FC<StudentProfileContainerProps> = ({ userId }) => {
+const StudentProfileContainer = (props: any) => {
     const [isEditing, setIsEditing] = useState(false);
     const [studentData, setStudentData] = useState<Student>({
         uid: '',
@@ -23,8 +23,13 @@ const StudentProfileContainer: React.FC<StudentProfileContainerProps> = ({ userI
     });
 
     useEffect(() => {
+        // check if user is not logged in
+        if (props.loggedInUser === null) {
+            console.log("NULL USER")
+            return;
+        }
         const fetchStudentData = async () => {
-            const response = await getStudent(userId);
+            const response = await getStudent(props.loggedInUser.uid);
             if (response.data) {
                 const apiData = response.data;
                 setStudentData(new Student(
@@ -41,7 +46,7 @@ const StudentProfileContainer: React.FC<StudentProfileContainerProps> = ({ userI
         };
         
         fetchStudentData();
-    }, [userId]);
+    }, []);
 
     const handleSave = async () => {
         const updateData = {

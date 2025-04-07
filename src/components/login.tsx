@@ -47,11 +47,8 @@ export default function Login(props: any) {
                 return;
             }
             console.log(data);
-            const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"], "test@gmail.com");
-            // store token.
             localStorage.setItem('Token', data["Token"]); 
-            setLoggedInUser({...user});
-            navigate("/home");
+
             // determine if student or recruiter.
             if (data.Role === "Student") {
                 const student = new Student(
@@ -65,8 +62,13 @@ export default function Login(props: any) {
                     data.Email
                 );
                 
-                props.setLoggedInUser(student);
+                setLoggedInUser({...student});
                 navigate("/home"); 
+            } else {
+                const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"]);
+                // store token.
+                setLoggedInUser({...user});
+                navigate("/home");
             }
         })
     }

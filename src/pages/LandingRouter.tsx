@@ -87,7 +87,7 @@ export default function LandingRouter(props: any) {
                         <RecruiterLanding loggedInUser={loggedInUser} page={recruiterInitialPageType} setPage={setRecruiterInitialPageType}/>
                         :
                         <StudentProfileContainer 
-                            userId={loggedInUser?.uid} 
+                            loggedInUser={loggedInUser} 
                         />
                     }
             </div>

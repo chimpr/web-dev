@@ -184,8 +184,6 @@ export const getJobs = async (user: User) => {
     return await(baseAPIGetCall("jobs/list/" + user.uid));
 }
 
-interface ApiResponse<T = any> {data?: T; Error?: string;}
-
 export const signUpStudent = async (school: string, gradSemester: string, gradYear: number, bio: string, firstName: string, lastName: string, email: string,password: string) => {
     const data = {
       School: school,
@@ -208,30 +206,23 @@ export const uploadResume = async (file: File, userId: string) => {
   
       const response = await axios.post(baseApiURL + "upload-resume", formData, {
         headers: {
+          ...getAuthHeaders(),
           'Content-Type': 'multipart/form-data'
         }
       });
-      
-      return { data: response.data };
+      if (response.status < 200 || response.status >= 300) {
+        return handleError(response.data["error"]);
+      }
+      return response.data;
     } catch (err: any) {
-      return handleError(err.response?.data?.error || err.message);
+      return handleError(err.response?.data?.error);
     }
 };
 
-export const getStudent = async (id: string): Promise<ApiResponse> => {
-    try {
-      const response = await axios.get(`${baseApiURL}student/${id}`);
-      return { data: response.data };
-    } catch (err: any) {
-      return handleError(err.response?.data?.error || err.message);
-    }
-  };
+export const getStudent = async (id: string) => {
+    return await baseAPIGetCall('student/' + id);
+};
   
-export const updateStudent = async (data: any): Promise<ApiResponse> => {
-    try {
-      const response = await axios.put(`${baseApiURL}student/update`, data);
-      return { data: response.data };
-    } catch (err: any) {
-      return handleError(err.response?.data?.error || err.message);
-    }
+export const updateStudent = async (data: any) => {
+    return await baseAPIPutCall(data, 'student/update/');
 };
