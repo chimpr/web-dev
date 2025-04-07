@@ -41,7 +41,7 @@ export default function JobSkillsWidget(props: any) {
     return <div className="job-skills-widget-wrapper">
                 {
                 skillsEditable ? 
-                    <div className="text-buddies">
+                    <div className="text-buddies" style={{justifyContent: 'start'}}>
                         <TextField required value={skillText} onChange={(t) => setSkillText(t.target.value)} label="Input Skill (1 Required)"/>
                         <Button onClick={handleAddSkillBtnClick} variant="contained">Add Skill</Button>
                     </div>

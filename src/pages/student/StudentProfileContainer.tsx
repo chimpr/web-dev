@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getStudent, updateStudent } from '../../api/api';
 import StudentProfileView from './StudentProfileView';
 import Student from '../../models/Student';
-import { Role } from '../../models/User';
+import User, { Role } from '../../models/User';
 
 // interface StudentProfileContainerProps {
 //     userId: string;
@@ -29,7 +29,8 @@ const StudentProfileContainer = (props: any) => {
             return;
         }
         const fetchStudentData = async () => {
-            const response = await getStudent(props.loggedInUser.uid);
+            const user = (props.loggedInUser as Student);
+            const response = await getStudent(user.uid);
             if (response.data) {
                 const apiData = response.data;
                 setStudentData(new Student(
