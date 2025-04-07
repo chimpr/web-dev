@@ -1,9 +1,10 @@
 import './style/student-new.css';
-import { Button, TextField, MenuItem } from "@mui/material";
+import { Button, TextField, MenuItem, FormControlLabel, Checkbox } from "@mui/material";
 import Logo from "./logo";
 import { PageType } from '../MainIsland';
 import InputFileUpload from './FileUpload';
 import useStudentSignUp, { type StudentSignUpHandlers } from './useStudentSignup';
+import { useState } from 'react';
 
 const MAX_BIO_CHARS = 300;
 
@@ -34,9 +35,30 @@ export default function StudentSignUp(props: any) {
     handleRegister
   } = useStudentSignUp(setCurPage);
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+
   const handleGoBackBtnClick = () => {
     setCurPage(PageType.LOGIN);
   };
+
+  // Password requirement states
+  const passwordRules = {
+    minLength: password.length >= 8,
+    hasLower: /[a-z]/.test(password),
+    hasUpper: /[A-Z]/.test(password),
+    hasNumber: /\d/.test(password),
+    hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+  };
+
+  const allPasswordValid = Object.values(passwordRules).every(Boolean);
+
+  // Helper for styling
+  const passwordStyle = (isValid: boolean) => ({
+    color: isValid ? 'green' : 'red',
+    fontSize: '0.9em',
+    margin: '0',
+  });
 
   return (
     <div className='student-sign-up'>
@@ -111,45 +133,67 @@ export default function StudentSignUp(props: any) {
               required
               style={{width: '50%'}}
               label="Password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               value={password}
+              onFocus={() => setPasswordFocused(true)}
+              onBlur={() => setPasswordFocused(false)}
               onChange={(e) => setPassword(e.target.value)}
             />
             <TextField
-            required
-            fullWidth
-            style={{width: '50%'}}
-            label="Confirm Password"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
+              required
+              fullWidth
+              style={{width: '50%'}}
+              label="Confirm Password"
+              type={showPassword ? 'text' : 'password'}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
           </div>
           
+          {/* Show Password */}
+          <FormControlLabel
+            label="Show Password"
+            control={
+              <Checkbox
+                onChange={() => setShowPassword(!showPassword)}
+                checked={showPassword}
+              />
+            }
+          />
+          
+          {/* Password validation rules */}
+          {(passwordFocused || password.length > 0) && (
+            <div style={{ marginTop: '0.5em', paddingLeft: '0.5em' }}>
+              <p style={passwordStyle(passwordRules.minLength)}>• At least 8 characters</p>
+              <p style={passwordStyle(passwordRules.hasLower)}>• One lowercase letter</p>
+              <p style={passwordStyle(passwordRules.hasUpper)}>• One uppercase letter</p>
+              <p style={passwordStyle(passwordRules.hasNumber)}>• One number</p>
+              <p style={passwordStyle(passwordRules.hasSpecial)}>• One special character</p>
+            </div>
+          )}
         </div>
 
         <div className='s-i-right'>
           <div>
-          <p>{`Biography (${bioCharCount}/${MAX_BIO_CHARS})`}</p>
-          <TextField
-            fullWidth
-            style={{margin: '0 0 12px 0'}} 
-            label="Bio (Optional)"
-            multiline
-            variant="outlined"
-            inputProps={{ maxLength: MAX_BIO_CHARS }}
-            minRows={8}
-            maxRows={8}
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-          />
+            <p>{`Biography (${bioCharCount}/${MAX_BIO_CHARS})`}</p>
+            <TextField
+              fullWidth
+              style={{margin: '0 0 12px 0'}} 
+              label="Bio (Optional)"
+              multiline
+              variant="outlined"
+              inputProps={{ maxLength: MAX_BIO_CHARS }}
+              minRows={8}
+              maxRows={8}
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+            />
           </div>
           <InputFileUpload 
               id="resume-upload" 
               text="Upload Resume" 
               onUpload={handleFileChange}
           />
-          {/* Maybe delete this error message later */}
           {error && <div className="error-message">{error}</div>}
           <Button 
             variant='contained' 
