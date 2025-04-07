@@ -3,6 +3,7 @@
     flex-direction: column;
     width: fill;
     height: fill;
+    overflow-y: auto;
 }
 
 .recruiter-sign-up-content {
@@ -16,3 +17,5 @@
 .recruiter-sign-up-content > p {
     font-size: 1em;
 }
+
+/* recruiter-sign-up.css */
