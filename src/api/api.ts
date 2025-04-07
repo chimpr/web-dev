@@ -164,6 +164,9 @@ export const deleteJob = async(jobID: string) => {
     return await baseAPIDeleteCall("jobs/delete/" + jobID);
 }
 
+export const getTopCandidates = async (jobID: string, numToGet: number) => {
+    return await baseAPIGetCall('jobs/topcandidates/' + jobID + '/' + numToGet);
+}
 
 /**
  * Gets the jobs from a recruiter.

@@ -19,13 +19,13 @@
 .job-skill {
     background-color: black;
     width: fit-content;
+    height: 5vh;
     padding: 3px;
     margin: 5px;
     display: flex;
     align-items: center;
     color: white;
     gap: 2px;
-    height: fit-content;
 }
 
 .job-skill > button {

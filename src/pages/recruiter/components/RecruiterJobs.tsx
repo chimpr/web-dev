@@ -6,9 +6,8 @@ import { Button, selectClasses } from '@mui/material';
 import CandidateWidget from './CandidateWidget';
 import PopupOverlay from '../../../components/PopupOverlay';
 import RecruiterCreateJob from './RecruiterCreateJob';
-import { deleteJob, getJobs } from '../../../api/api';
+import { deleteJob, getJobs, getTopCandidates } from '../../../api/api';
 import JobSkillsWidget from './JobSkillsWidget';
-import { error } from 'console';
 
 export default function RecruiterJobs(props: any) {
 
@@ -17,11 +16,32 @@ export default function RecruiterJobs(props: any) {
     const [createJobVisible, setCreateJobVisible] = useState(false);
     const [jobToEdit, setJobToEdit] = useState<Job>();
 
-    const candidates = ["Jon","Josh","Jack","Jayman"]
+    const [topCandidates, setTopCandidates] = useState([]);
+    const [gettingTopCandidates, setGettingTopCandidates] = useState(false);
+    const NUM_TOP_CANDIDATES = 5;
+    
     // example data is used for now.
     useEffect(() => {
       updateJobs();
     }, [createJobVisible === false]);
+
+    // hook for updating top candidates once a job is selected.
+    useEffect(() => {
+        if (selectedJob === undefined) {
+            setTopCandidates([]);
+            setGettingTopCandidates(false);
+            return;
+        }
+        setGettingTopCandidates(true);
+        // update top candidates.
+        getTopCandidates(selectedJob.jid, NUM_TOP_CANDIDATES).then((res) => {
+            if (res['Error'] !== '') {
+                console.log("Error getting top candidates");
+            }
+        }).finally(() => {
+            setGettingTopCandidates(false);
+        });
+    }, [selectedJob]);
 
     const updateJobs = () => {
         const jList = new Array<Job>();
@@ -63,9 +83,17 @@ export default function RecruiterJobs(props: any) {
                     <Button onClick={() => {setJobToEdit(undefined); setCreateJobVisible(true)}} sx={{width: 'fit-content'}} variant='contained'>Create Job</Button>
                     <div className="jobs-scrollview">
                             {
-                                jobList.map((job, idx) => (
-                                    <JobWidget job={job} selected={job == selectedJob} setSelectedJob={setSelectedJob}/>
-                                ))
+                                (jobList.length === 0) ? 
+                                    <>
+                                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                        <h2>No Jobs!</h2>
+                                        <Button onClick={() => {setJobToEdit(undefined); setCreateJobVisible(true);}}>Heal The Economy</Button>
+                                        </div>
+                                    </>
+                                :
+                                    jobList.map((job, idx) => (
+                                        <JobWidget job={job} selected={job == selectedJob} setSelectedJob={setSelectedJob}/>
+                                    ))
                             }
                     </div>
                 </div>
@@ -89,9 +117,18 @@ export default function RecruiterJobs(props: any) {
                                 <p style={{fontWeight: 'bold', marginTop: '1vh'}}>Top Candidates</p>
                                 <div className='jobs-scrollview' style={{maxHeight: "22vh", gap: '1vh'}}>
                                     {
-                                        candidates.map((c, i) => (
-                                            <CandidateWidget name={c}/>
-                                        ))
+                                        gettingTopCandidates ?
+                                        <> 
+                                            <div style={{alignSelf: 'center'}} className='loader'/>
+                                            <p style={{alignSelf: 'center'}}>Loading Top Candidates</p>
+                                        </>
+                                        :
+                                            topCandidates.length === 0 ? 
+                                                <p>No Candidates Found</p>
+                                            :
+                                                topCandidates.map((c, i) => (
+                                                    <CandidateWidget key={i} name={c}/>
+                                                ))
                                     }
                                 </div>
                             </div>

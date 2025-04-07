@@ -3,6 +3,7 @@
     flex-direction: column;
     width: fill;
     height: fill;
+    overflow-y: scroll;
 }
 
 .recruiter-sign-up-content {
