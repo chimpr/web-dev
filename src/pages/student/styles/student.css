@@ -89,7 +89,7 @@
 .student-button:hover {
     background-color: #0052a3;
 }
-.student-info {
+.student-infoRes {
     display: block;
     padding: 0.5rem 0;
     color: black;

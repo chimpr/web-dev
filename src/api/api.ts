@@ -20,7 +20,7 @@ const handleError = (msg: String) => {
     return res;
 } 
 
-const baseAPIPostCall = async (data: any, path: string) => {
+  const baseAPIPostCall = async (data: any, path: string) => {
     try {
         const response = await axios.post(baseApiURL + path, data, {
                 headers: {
@@ -94,15 +94,23 @@ const baseAPIDeleteCall = async (path: string) => {
         console.log("Response status:", response.status); // Log the response status code
 
         if (response.status < 200 || response.status >= 300) {
-            return handleError(response.data["error"]);
+            return handleError(response.data.error || 'Unknown error occurred');
         }
         return response.data;
     } catch (err: any) {
         if (err.response) {
-            return handleError(err.response.data["error"]);
+            // Non-2xx status response
+            const errorMessage = err.response.data.error || 'Unknown error occurred';
+            return handleError(errorMessage);
+        } else if (err.request) {
+            // No response
+            return handleError('Network error. Please check your connection.');
+        } else {
+            // Setup error
+            return handleError(err.message || 'An unexpected error occurred');
         }
     }
-}
+};
 
 
 /**
@@ -175,3 +183,55 @@ export const getTopCandidates = async (jobID: string, numToGet: number) => {
 export const getJobs = async (user: User) => {
     return await(baseAPIGetCall("jobs/list/" + user.uid));
 }
+
+interface ApiResponse<T = any> {data?: T; Error?: string;}
+
+export const signUpStudent = async (school: string, gradSemester: string, gradYear: number, bio: string, firstName: string, lastName: string, email: string,password: string) => {
+    const data = {
+      School: school,
+      Grad_Semester: gradSemester,
+      Grad_Year: gradYear,
+      Bio: bio,
+      FirstName: firstName,
+      LastName: lastName,
+      Email: email,
+      Password: password
+    };
+    return await baseAPIPostCall(data, "student/signup");
+  };
+
+export const uploadResume = async (file: File, userId: string) => {
+    try {
+      const formData = new FormData();
+      formData.append('resume', file);
+      formData.append('userId', userId);
+  
+      const response = await axios.post(baseApiURL + "upload-resume", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      return { data: response.data };
+    } catch (err: any) {
+      return handleError(err.response?.data?.error || err.message);
+    }
+};
+
+export const getStudent = async (id: string): Promise<ApiResponse> => {
+    try {
+      const response = await axios.get(`${baseApiURL}student/${id}`);
+      return { data: response.data };
+    } catch (err: any) {
+      return handleError(err.response?.data?.error || err.message);
+    }
+  };
+  
+export const updateStudent = async (data: any): Promise<ApiResponse> => {
+    try {
+      const response = await axios.put(`${baseApiURL}student/update`, data);
+      return { data: response.data };
+    } catch (err: any) {
+      return handleError(err.response?.data?.error || err.message);
+    }
+};

@@ -3,6 +3,7 @@ import MainIsland from './MainIsland';
 import LandingRouter from './pages/LandingRouter';
 import { useState } from 'react';
 import User from './models/User';
+import StudentProfileContainer from './pages/student/StudentProfileContainer';
 
 function App() {
 
@@ -15,7 +16,7 @@ function App() {
     <Router>
       <Routes>
           <Route path="/" Component={MainIslandLoad}/>
-          <Route path="/home" Component={LandingLoad}/>
+          <Route path="/home" element={<LandingRouter loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser} />} />
       </Routes>
     </Router>
   );

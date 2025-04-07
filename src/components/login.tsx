@@ -9,6 +9,7 @@ import {doLogin} from '../api/api';
 import { useNavigate } from 'react-router-dom';
 import './style/login.css';
 import User from '../models/User';
+import Student from '../models/Student';
 
 export default function Login(props: any) {
 
@@ -51,6 +52,22 @@ export default function Login(props: any) {
             localStorage.setItem('Token', data["Token"]); 
             setLoggedInUser({...user});
             navigate("/home");
+            // determine if student or recruiter.
+            if (data.Role === "Student") {
+                const student = new Student(
+                    data.ID,
+                    data.FirstName,
+                    data.LastName,
+                    data.School || "",
+                    data.Grad_Semester || "",
+                    data.Grad_Year || 0,
+                    data.Bio || "",
+                    data.Email
+                );
+                
+                props.setLoggedInUser(student);
+                navigate("/home"); 
+            }
         })
     }
 
@@ -116,7 +133,7 @@ export default function Login(props: any) {
                 <div className={"login-side-movable-div " + (!signUpCovered ? "" : ", transform")}>
                     <img className='login-business-monkey' src={BusinessMonkey}/>
                     <div style={{textAlign: 'center'}}>
-                        <p className='header-text'>Welome To The Future of Recruiting</p>
+                        <p className='header-text'>Welcome To The Future of Recruiting</p>
                         <p>We put the fair in career fair</p>
                     </div>
                 </div>

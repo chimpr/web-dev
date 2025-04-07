@@ -6,7 +6,7 @@ import RecruiterLanding, { RecruiterPageType } from "./recruiter/RecruiterLandin
 import './style/LandingRouter.css'
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import StudentProfile from "./student/StudentProfile";
+import StudentProfileContainer from "./student/StudentProfileContainer";
 import User, { Role } from "../models/User";
 
 export default function LandingRouter(props: any) {
@@ -86,7 +86,9 @@ export default function LandingRouter(props: any) {
                     ?
                         <RecruiterLanding loggedInUser={loggedInUser} page={recruiterInitialPageType} setPage={setRecruiterInitialPageType}/>
                         :
-                        <StudentProfile/>
+                        <StudentProfileContainer 
+                            userId={loggedInUser?.uid} 
+                        />
                     }
             </div>
         </div>
