@@ -1,32 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './styles/student.css';
 import Student from '../../models/Student';
 import Performance from './Performance';
 import EditIcon from '@mui/icons-material/Edit';
 import FileUpload from '../../components/FileUpload';
-import { uploadResume, getResume } from '../../api/api'
+import { updateResume, getResume } from '../../api/api';
+import { Button } from '@mui/material';
 
 interface StudentProfileViewProps {
+    recruiterView?: boolean,
     isEditing: boolean;
     studentData: Student;
     onEditToggle: () => void;
     onSave: () => void;
-    onDataChange: (data: Student) => void;
+    onDataChange?: (data: Student) => void;
     resumeUrl?: string;
-    setResumeUrl: (url: string) => void;
+    setResumeUrl: React.Dispatch<React.SetStateAction<string>>;
+    userId: string;
 }
 
 const StudentProfileView: React.FC<StudentProfileViewProps> = ({
+    recruiterView,
     isEditing,
     studentData,
     onEditToggle,
     onSave,
     onDataChange,
     resumeUrl,
-    setResumeUrl
+    setResumeUrl,
+    userId 
 }) => {
+    const [selectedResumeFile, setSelectedResumeFile] = useState<File | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
+
     const handleChange = (field: keyof Student, value: string | number) => {
-        onDataChange({ ...studentData, [field]: value });
+        if (!recruiterView && onDataChange)
+            onDataChange({ ...studentData, [field]: value });
+    };
+
+    const handleResumeUpload = async () => {
+        if (!selectedResumeFile || !userId) return;
+        
+        try {
+            setIsUploading(true);
+            const response = await updateResume(selectedResumeFile, userId);
+            
+            console.log('Update response:', response); 
+            
+            if (response && response.resume) {
+                setResumeUrl(`${response.resume.downloadUrl}?t=${Date.now()}`);
+                setSelectedResumeFile(null);
+            } else if (response?.Error) {
+                console.error('Upload failed:', response.Error);
+            }
+        } catch (error) {
+            console.error('Resume upload failed:', error);
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     return (
@@ -123,58 +154,86 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({
                     <div className="info-block resume-viewer">
                         <h2>Resume</h2>
                         {isEditing && (
-                            <FileUpload 
-                                id="resume-upload"
-                                text={resumeUrl ? "Update Resume" : "Upload Resume"}
-                                onUpload={async (file) => {
-                                    const response = await uploadResume(file, studentData.uid);
-                                    if (response.data) {
-                                        const resumeResponse = await getResume(studentData.uid);
-                                        if (resumeResponse.data) {
-                                            setResumeUrl(resumeResponse.data.Path);
-                                        }
-                                    }
-                                }}
-                            />
+                            <div className="resume-upload-section">
+                                <FileUpload 
+                                    id="resume-upload"
+                                    text="Select New Resume"
+                                    onUpload={(file) => setSelectedResumeFile(file)}
+                                />
+                                {selectedResumeFile && (
+                                    <Button
+                                        variant="contained"
+                                        onClick={handleResumeUpload}
+                                        disabled={isUploading}
+                                        style={{
+                                            backgroundColor: '#0066cc',
+                                            color: 'white',
+                                            marginLeft: '10px'
+                                        }}
+                                    >
+                                        {isUploading ? 'Uploading...' : 'Save Resume'}
+                                    </Button>
+                                )}
+                                {selectedResumeFile && (
+                                    <p style={{ marginTop: '0.5rem' }}>
+                                        Selected file: {selectedResumeFile.name}
+                                    </p>
+                                )}
+                            </div>
                         )}
-                        {(
+                        {resumeUrl && (
                             <iframe
                                 title="resume-preview"
                                 src={`${'http://localhost:5001'}${resumeUrl}`}
-                                // src='http://localhost:5001/api/resumes/resume-fb9b68d7-193b-4a1c-bb91-fb326eeeab98.pdf'
                                 className="resume-iframe"
+                                key={resumeUrl}
                             />
                         )}
                     </div>
                 )}
-                    
-                <button 
-                  onClick={isEditing ? onSave : onEditToggle}
-                  className="student-button"
-                  style={{
-                      backgroundColor: '#0066cc',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                  }}
-                >
-                    {isEditing ? (
-                        <>Save Changes</>
-                    ) : (
-                        <>
-                            <EditIcon style={{ fontSize: '18px' }} />
-                            Edit Profile
-                        </>
-                    )}
-                </button>
+                {
+                    recruiterView ? 
+                    <></>
+                    :
+                    <>
+                        <button 
+                        onClick={() => {
+                            console.log('Save button clicked');
+                            console.log('Current student data:', studentData);
+                            isEditing ? onSave() : onEditToggle();
+                        }}
+                        className="student-button"
+                        style={{
+                            backgroundColor: '#0066cc',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}
+                        >
+                            {isEditing ? (
+                                <>Save Changes</>
+                            ) : (
+                                <>
+                                    <EditIcon style={{ fontSize: '18px' }} />
+                                    Edit Profile
+                                </>
+                            )}
+                        </button>
+                    </>
+                }
             </div>
 
-            <div className="right-space">
-                <Performance 
-                    score={studentData.jobPerformance?.[0] || 0}
-                    comment={studentData.jobPerformance?.[1] || "No reviews yet"}
-                />
-            </div>
+            {
+                recruiterView ? 
+                <></>
+                :
+                <div className="right-space">
+                    <Performance 
+                        score={studentData.jobPerformance?.[0] || 0}
+                        comment={studentData.jobPerformance?.[1] || "No reviews yet"}
+                    />
+                </div>
+            }
         </div>
     );
 };

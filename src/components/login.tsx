@@ -46,6 +46,8 @@ export default function Login(props: any) {
                 setUnPwIncorr(true);
                 return;
             }
+            console.log(data);
+            localStorage.setItem('Token', data["Token"]); 
 
             // determine if student or recruiter.
             if (data.Role === "Student") {
@@ -60,14 +62,14 @@ export default function Login(props: any) {
                     data.Email
                 );
                 
-                props.setLoggedInUser(student);
+                setLoggedInUser({...student});
                 navigate("/home"); 
+            } else {
+                const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"]);
+                // store token.
+                setLoggedInUser({...user});
+                navigate("/home");
             }
-            
-            // // todo: remove me -- for testing purposes (I'm hardcoding Recruiter)
-            // const user = new User(data["ID"], "Recruiter", data["FirstName"], data["LastName"], "test@gmail.com");
-            // setLoggedInUser({...user});
-            // navigate("/home");
         })
     }
 

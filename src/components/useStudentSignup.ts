@@ -84,10 +84,11 @@ export default function useStudentSignUp(setCurPage: (page: PageType) => void): 
       if (!resumeFile) {
           throw new Error('No resume file selected');
       }
-      const uploadResponse = await uploadResume(resumeFile, signupResponse.ID);
-      if (uploadResponse.Error) {
-          throw new Error(uploadResponse.Error);
-      }
+      uploadResume(resumeFile, signupResponse.ID).then((res) => {
+        if (res['Error'] !== '') {
+
+        }
+      })
 
       setCurPage(PageType.LOGIN);
     } catch (err: any) {

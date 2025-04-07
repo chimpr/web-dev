@@ -1,0 +1,38 @@
+.job-skills-widget-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: fill;
+    gap: 1vh;
+}
+
+.job-skills-area {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: lightgray;
+    height: 12vh;
+    width: fill;
+    overflow-y: scroll;
+}
+
+.job-skill {
+    background-color: black;
+    width: fit-content;
+    height: 5vh;
+    padding: 3px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    color: white;
+    gap: 2px;
+}
+
+.job-skill > button {
+    height: fit-content;
+    border-radius: 2px;
+    width: auto;
+    background-color: black;
+    border-color: white;
+    color: white;
+}

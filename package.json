@@ -21,6 +21,7 @@
     "ajv-keywords": "^5.1.0",
     "axios": "^1.8.1",
     "dayjs": "^1.11.13",
+    "jwt-decode": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-google-charts": "^5.2.1",

@@ -2,13 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { getStudent, updateStudent, getResume } from '../../api/api';
 import StudentProfileView from './StudentProfileView';
 import Student from '../../models/Student';
-import { Role } from '../../models/User';
+import User, { Role } from '../../models/User';
 
-interface StudentProfileContainerProps {
-    userId: string;
-}
-
-const StudentProfileContainer: React.FC<StudentProfileContainerProps> = ({ userId }) => {
+const StudentProfileContainer = (props: any) => {
     const [isEditing, setIsEditing] = useState(false);
     const [studentData, setStudentData] = useState<Student>({
         uid: '',
@@ -23,24 +19,48 @@ const StudentProfileContainer: React.FC<StudentProfileContainerProps> = ({ userI
         jobPerformance: [0, "No reviews yet"]
     });
     
-    const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+    const [resumeUrl, setResumeUrl] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
-            const studentResponse = await getStudent(userId);
-            if (studentResponse.data) {
-                const apiData = studentResponse.data;
+            if (!props.loggedInUser) return;
+    
+            try {
+                const studentResponse = await getStudent(props.loggedInUser.uid);
+                if (studentResponse.Error) {
+                    console.error('Student fetch error:', studentResponse.Error);
+                    return;
+                }
+                if (!studentResponse._id) {
+                    console.error('Invalid student data:', studentResponse);
+                    return;
+                }
+                
                 setStudentData(new Student(
-                    apiData._id,
-                    apiData.FirstName,
-                    apiData.LastName,
-                    apiData.School,
-                    apiData.Grad_Semester,
-                    apiData.Grad_Year,
-                    apiData.Bio,
-                    apiData.Email,
-                    apiData.Job_Performance || [0, "No reviews yet"]
+                    studentResponse._id,
+                    studentResponse.FirstName,
+                    studentResponse.LastName,
+                    studentResponse.School,
+                    studentResponse.Grad_Semester,
+                    studentResponse.Grad_Year,
+                    studentResponse.Bio,
+                    studentResponse.Email,
+                    studentResponse.Job_Performance || [0, "No reviews yet"]
                 ));
+
+                const resumeResponse = await getResume(props.loggedInUser.uid);
+                if (resumeResponse.Error) {
+                    console.error('Resume fetch error:', resumeResponse.Error);
+                    return;
+                }
+                if (resumeResponse.downloadUrl) {
+                    const fileName = resumeResponse.downloadUrl.split('/').pop();
+                    setResumeUrl(`/api/resumes/${fileName}?t=${Date.now()}`);
+                }else {
+                    setResumeUrl('');
+                }
+            } catch (error) {
+                console.error('Data fetch failed:', error);
             }
 
             const resumeResponse = await getResume(userId);
@@ -52,24 +72,45 @@ const StudentProfileContainer: React.FC<StudentProfileContainerProps> = ({ userI
                 setResumeUrl(`/api/resumes/${fileName}`);
             }
         };
-        
         fetchData();
-    }, [userId]);
+    }, [props.loggedInUser]);
 
     const handleSave = async () => {
-        const updateData = {
-            id: studentData.uid,
-            School: studentData.school,
-            Grad_Semester: studentData.gradSemester,
-            Grad_Year: studentData.gradYear,
-            Bio: studentData.bio,
-            FirstName: studentData.firstName,
-            LastName: studentData.lastName
-        };
-
-        const response = await updateStudent(updateData);
-        if (response.data) {
-            setIsEditing(false);
+        try {
+            const updateData = {
+                id: studentData.uid,
+                School: studentData.school,
+                Grad_Semester: studentData.gradSemester,
+                Grad_Year: studentData.gradYear,
+                Bio: studentData.bio,
+                FirstName: studentData.firstName,
+                LastName: studentData.lastName
+            };
+    
+            console.log('Sending update:', updateData);
+            
+            const response = await updateStudent(updateData);
+            console.log('Update response:', response);
+            
+            if (!response.Error) {
+                const updatedStudent = await getStudent(studentData.uid);
+                if (updatedStudent && !updatedStudent.Error) {
+                    setStudentData(new Student(
+                        updatedStudent._id,
+                        updatedStudent.FirstName,
+                        updatedStudent.LastName,
+                        updatedStudent.School,
+                        updatedStudent.Grad_Semester,
+                        updatedStudent.Grad_Year,
+                        updatedStudent.Bio,
+                        updatedStudent.Email,
+                        updatedStudent.Job_Performance
+                    ));
+                }
+                setIsEditing(false);
+            }
+        } catch (error) {
+            console.error('Save failed:', error);
         }
     };
 
@@ -82,6 +123,8 @@ const StudentProfileContainer: React.FC<StudentProfileContainerProps> = ({ userI
             onDataChange={setStudentData}
             resumeUrl={resumeUrl || undefined}
             setResumeUrl={setResumeUrl} 
+            recruiterView={false}
+            userId={props.loggedInUser?.uid}
         />
     );
 };

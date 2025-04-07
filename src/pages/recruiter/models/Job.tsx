@@ -12,5 +12,4 @@ export default class Job {
         this.skills      = skills;
     }
 
-
 }
