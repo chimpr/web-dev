@@ -1,8 +1,9 @@
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import './style/RecruiterCreateJob.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import JobSkillsWidget from './JobSkillsWidget';
-import { createJob } from '../../../api/api';
+import { createJob, updateJob } from '../../../api/api';
+import Job from '../models/Job';
 
 export default function RecruiterCreateJob(props: any) {
 
@@ -11,6 +12,24 @@ export default function RecruiterCreateJob(props: any) {
     const [skills, setSkills] = useState<string[]>([]);
     const [type, setType] = useState('Internship');
     const [busy, setBusy] = useState(false);
+
+    const [isEditingJob, setIsEditingJob] = useState(false);
+    const [editingJob, setEditingJob] = useState<Job|undefined>(props.jobToEdit);
+    
+    //determine if we're editing a job or not.
+    useEffect(() => {
+        const areEditing = props.jobToEdit instanceof Job;
+        console.log(areEditing);
+        setIsEditingJob(areEditing);
+        if (!areEditing)
+            return;
+        // is a job
+        const incomingJob = ({...props.jobToEdit} as Job);
+        setEditingJob(incomingJob);
+        setJobTitle(incomingJob.title);
+        setSkills([...incomingJob.skills])
+        setDescription(incomingJob.description);
+    },[props.jobToEdit]);
     
     const jobInvalid = (jobTitle.trim() === '' || skills.length === 0 || description === '');
     const handleSelectionChange = (select: any) => {
@@ -24,15 +43,29 @@ export default function RecruiterCreateJob(props: any) {
 
         setBusy(true);
 
-        createJob(jobTitle, skills, type, props.loggedInUser?.uid).then((res) => {
-            console.log(res);
-            if (res['Error'] !== '') {
-                alert("Error: " + res['Error']);
-                return;
-            }
-            clearOutFields();
-            props.setCreateJobVisible(false);
-        });
+        // determine if we're creating or editing a job.
+        if (isEditingJob && editingJob !== undefined) {
+            console.log(editingJob.jid)
+            updateJob(editingJob.jid, jobTitle, skills, type).then((res) => {
+                console.log(res);
+                if (res['Error'] !== '') {
+                    alert("Error: " + res['Error']);
+                    return;
+                }
+                clearOutFields();
+                props.setCreateJobVisible(false);
+            })
+        } else {
+            createJob(jobTitle, skills, type, props.loggedInUser?.uid).then((res) => {
+                console.log(res);
+                if (res['Error'] !== '') {
+                    alert("Error: " + res['Error']);
+                    return;
+                }
+                clearOutFields();
+                props.setCreateJobVisible(false);
+            });
+        }
     }
 
     const clearOutFields = () => {
@@ -41,6 +74,8 @@ export default function RecruiterCreateJob(props: any) {
         setSkills([]);
         setDescription('');
         setType('Internship')
+        setIsEditingJob(false);
+        props.setJobToEdit(undefined);
         setBusy(false);
     }
 
@@ -53,7 +88,7 @@ export default function RecruiterCreateJob(props: any) {
 
     return <div className='create-job-content'>
                 <div className='create-job-text-fields'>
-                    <h1>Create Job</h1>
+                    <h1>{isEditingJob ? "Edit":"Create"} Job</h1>
                     <div className='text-buddies'>
                         <TextField value={jobTitle} onChange={(t) => setJobTitle(t.target.value)} required sx={{width: '50vw'}} label="Job Title"/>
                         <FormControl fullWidth>
@@ -76,7 +111,7 @@ export default function RecruiterCreateJob(props: any) {
                 </div>
                 <div className='create-job-button-area'>
                     <Button onClick={handleCancelBtnClick}>Cancel</Button>
-                    <Button disabled={jobInvalid || busy} onClick={handleCreateJobBtnClick} variant='contained'>Create Job</Button>
+                    <Button disabled={jobInvalid || busy} onClick={handleCreateJobBtnClick} variant='contained'>{isEditingJob ? "Save" : "Create"} Job</Button>
                 </div>
             </div>
 }

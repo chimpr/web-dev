@@ -16,8 +16,8 @@ export default function RecruiterWelcome(props: any) {
                     <p>What would you like to do today?</p>
                 </div>
                 <div className='welcome-buttons'>
-                    <Button onClick={() => props.setCurPage(RecruiterPageType.JOBS)} sx={buttonStyle} variant='contained'>Create New Event</Button>
-                    <Button onClick={() => props.setCurPage(RecruiterPageType.EVENTS)} sx={buttonStyle} variant='contained'>Post New Job</Button>
+                    <Button onClick={() => props.setCurPage(RecruiterPageType.EVENTS)} sx={buttonStyle} variant='contained'>Create New Event</Button>
+                    <Button onClick={() => props.setCurPage(RecruiterPageType.JOBS)} sx={buttonStyle} variant='contained'>Post New Job</Button>
                 </div>
             </div>
             <div className='welcome-rs'>

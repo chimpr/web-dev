@@ -5,12 +5,13 @@ import './style/JobSkillsWidget.css'
 
 export default function JobSkillsWidget(props: any) {
    
-    const [skills, setSkills] = useState<string[]>(props.skills);
+    const [skills, setSkills] = useState<string[]>([...props.skills]);
     const skillsEditable = props.skillsEditable;
     const [showSkillExists, setShowSkillExists] = useState(false);
     const [skillText, setSkillText] = useState('');
 
     useEffect(() => {
+        // update the skills
         if (skillsEditable)
             props.setSkills(skills);
     }, [skills])
@@ -27,7 +28,7 @@ export default function JobSkillsWidget(props: any) {
     }
 
     const handleRemoveSkill = (index: any) => {
-        setSkills(skills.filter((_, idx) => idx !== index));
+        setSkills((props.skills as string[]).filter((_, idx) => idx !== index));
     };
     
     const Skill = (s: string, idx: any) => {

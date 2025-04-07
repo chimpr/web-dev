@@ -6,14 +6,16 @@ import { Button, selectClasses } from '@mui/material';
 import CandidateWidget from './CandidateWidget';
 import PopupOverlay from '../../../components/PopupOverlay';
 import RecruiterCreateJob from './RecruiterCreateJob';
-import { getJobs } from '../../../api/api';
+import { deleteJob, getJobs } from '../../../api/api';
 import JobSkillsWidget from './JobSkillsWidget';
+import { error } from 'console';
 
 export default function RecruiterJobs(props: any) {
 
     const [jobList, setJobList] = useState<Array<Job>>([]);
     const [selectedJob, setSelectedJob] = useState<Job>();
     const [createJobVisible, setCreateJobVisible] = useState(false);
+    const [jobToEdit, setJobToEdit] = useState<Job>();
 
     const candidates = ["Jon","Josh","Jack","Jayman"]
     // example data is used for now.
@@ -37,10 +39,28 @@ export default function RecruiterJobs(props: any) {
         });
     }
 
+    /**
+     * Handles job edit
+     */
+    const handleJobEditBtnClick = () => {
+        setJobToEdit(selectedJob);
+        setCreateJobVisible(true);
+    } 
+
+    const handleDeleteBtnClick = () => {
+        if (selectedJob === undefined)
+            return;
+        deleteJob(selectedJob.jid).then((res) => {
+            if (res["error"] !== "") {
+                alert("Error deleting job: " + res["error"]);
+            }
+        }).finally(() => {updateJobs(); setSelectedJob(undefined);});
+    }
+
     return (<div className="jobs-wrapper">
                 <div className="jobs-ls">
                     <h1>Current Jobs</h1>
-                    <Button onClick={() => setCreateJobVisible(true)} sx={{width: 'fit-content'}} variant='contained'>Create Job</Button>
+                    <Button onClick={() => {setJobToEdit(undefined); setCreateJobVisible(true)}} sx={{width: 'fit-content'}} variant='contained'>Create Job</Button>
                     <div className="jobs-scrollview">
                             {
                                 jobList.map((job, idx) => (
@@ -56,14 +76,14 @@ export default function RecruiterJobs(props: any) {
                         <>
                             <h1>Selected Job</h1>
                             <div className='job-card'>
-                                <h1>{selectedJob.title}</h1>
-                                <p>{selectedJob.description}</p>
+                                <h1>{selectedJob?.title}</h1>
+                                <p>{selectedJob?.description}</p>
                                 <p style={{fontWeight: "bold"}}>Skills</p>
                                 <div className='job-skill-area'>
-                                    <JobSkillsWidget skills={selectedJob.skills} skillsEditable={false}/>
+                                    <JobSkillsWidget skills={selectedJob?.skills} skillsEditable={false}/>
                                 </div>
-                                <Button  variant='contained'>Edit</Button>
-                                <Button sx={{backgroundColor: 'red'}}variant='contained'>Delete</Button>
+                                <Button onClick={handleJobEditBtnClick} variant='contained'>Edit</Button>
+                                <Button onClick={handleDeleteBtnClick} sx={{backgroundColor: 'red'}}variant='contained'>Delete</Button>
                             </div>
                             <div className='job-card'>
                                 <p style={{fontWeight: 'bold', marginTop: '1vh'}}>Top Candidates</p>
@@ -78,6 +98,6 @@ export default function RecruiterJobs(props: any) {
                         </>
                     }
                 </div>
-                <PopupOverlay visible={createJobVisible} content={<RecruiterCreateJob loggedInUser={props.loggedInUser} setCreateJobVisible={setCreateJobVisible}/>}/>
+                <PopupOverlay visible={createJobVisible} content={<RecruiterCreateJob setJobToEdit={setJobToEdit} loggedInUser={props.loggedInUser} jobToEdit={jobToEdit} setCreateJobVisible={setCreateJobVisible}/>}/>
             </div>);
 }

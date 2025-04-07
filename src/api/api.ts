@@ -62,6 +62,49 @@ const baseAPIGetCall = async (path: string) => {
     }
 }
 
+const baseAPIPutCall = async (data: any, path: string) => {
+    try {
+        const response = await axios.put(baseApiURL + path, data, {
+                headers: {
+                    ...getAuthHeaders(),
+                    'Content-Type': 'application/json',
+                },
+            });
+        console.log("Response status:", response.status); // Log the response status code
+
+        if (response.status < 200 || response.status >= 300) {
+            return handleError(response.data["error"]);
+        }
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return handleError(err.response.data["error"]);
+        }
+    }
+}
+
+const baseAPIDeleteCall = async (path: string) => {
+    try {
+        const response = await axios.delete(baseApiURL + path, {
+                headers: {
+                    ...getAuthHeaders(),
+                    'Content-Type': 'application/json',
+                },
+            });
+        console.log("Response status:", response.status); // Log the response status code
+
+        if (response.status < 200 || response.status >= 300) {
+            return handleError(response.data["error"]);
+        }
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return handleError(err.response.data["error"]);
+        }
+    }
+}
+
+
 /**
  * Logs user in.
  * @param email User email
@@ -98,6 +141,29 @@ export const createJob = async (title: string, skills: string[], type: string, r
     };
     return await baseAPIPostCall(data, "jobs/create");
 }
+
+/**
+ * Updates a passed job in the DB.
+ * @param jobID ID of Job
+ * @param title Title of Job
+ * @param skills List of skills
+ * @param type Job type
+ * @returns 
+ */
+export const updateJob = async(jobID: string, title: string, skills: string[], type: string) => {
+    const data = {
+        "id"    : jobID,
+        "Title" : title,
+        "Skills": skills,
+        "Type"  : type
+    };
+    return await baseAPIPutCall(data, "jobs/update");
+}
+
+export const deleteJob = async(jobID: string) => {
+    return await baseAPIDeleteCall("jobs/delete/" + jobID);
+}
+
 
 /**
  * Gets the jobs from a recruiter.
