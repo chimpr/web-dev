@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getStudent, updateStudent } from '../../api/api';
+import { getStudent, updateStudent, getResume } from '../../api/api';
 import StudentProfileView from './StudentProfileView';
 import Student from '../../models/Student';
 import User, { Role } from '../../models/User';
@@ -19,8 +19,11 @@ const StudentProfileContainer = (props: any) => {
         gradSemester: '',
         gradYear: 0,
         bio: '',
-        email: ''
+        email: '',
+        jobPerformance: [0, "No reviews yet"]
     });
+    
+    const [resumeUrl, setResumeUrl] = useState<string | null>(null);
 
     useEffect(() => {
         // check if user is not logged in
@@ -28,25 +31,37 @@ const StudentProfileContainer = (props: any) => {
             console.log("NULL USER")
             return;
         }
-        const fetchStudentData = async () => {
-            const user = (props.loggedInUser as Student);
-            const response = await getStudent(user.uid);
-            if (response.data) {
-                const apiData = response.data;
-                setStudentData(new Student(
-                    apiData._id,
-                    apiData.FirstName,
-                    apiData.LastName,
-                    apiData.School,
-                    apiData.Grad_Semester,
-                    apiData.Grad_Year,
-                    apiData.Bio,
-                    apiData.Email
-                ));
-            }
-        };
+        const user = (props.loggedInUser as Student);
+        const response =  getStudent(user.uid);
+        getStudent(user.uid).then((response) => {
+            setStudentData(new Student(
+                response['_id'],
+                response['FirstName'],
+                response['LastName'],
+                response['School'],
+                response['Grad_Semester'],
+                response['Grad_Year'],
+                response['Bio'],
+                response['Email'],
+                response['Job_Performance'] || [0, "No reviews yet"]
+            ));
+        });
+
+        getResume(user.uid).then((res) => {
+            console.log(res);
+            if (res['fileName'] === null || res['fileName'] === '')
+                return;
+
+            const resumeUrl = res['downloadUrl'];
+            const fileName = resumeUrl.includes('/') 
+            ? resumeUrl.split('/').pop()
+            : resumeUrl;
+
+            console.log(resumeUrl);
+            setResumeUrl(`/api/resumes/${fileName}`);
+    
+        });
         
-        fetchStudentData();
     }, []);
 
     const handleSave = async () => {
@@ -73,6 +88,8 @@ const StudentProfileContainer = (props: any) => {
             onEditToggle={() => setIsEditing(!isEditing)}
             onSave={handleSave}
             onDataChange={setStudentData}
+            resumeUrl={resumeUrl || undefined}
+            setResumeUrl={setResumeUrl} 
         />
     );
 };

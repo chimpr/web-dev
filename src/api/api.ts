@@ -224,5 +224,9 @@ export const getStudent = async (id: string) => {
 };
   
 export const updateStudent = async (data: any) => {
-    return await baseAPIPutCall(data, 'student/update/');
+    return await baseAPIPutCall(data, 'student/update');
+};
+
+export const getResume = async (userID: string) => {
+    return await baseAPIGetCall('resumes/' + userID);
 };
