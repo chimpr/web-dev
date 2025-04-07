@@ -219,14 +219,56 @@ export const uploadResume = async (file: File, userId: string) => {
     }
 };
 
-export const getStudent = async (id: string) => {
+interface StudentResponse {
+    _id: string;
+    FirstName: string;
+    LastName: string;
+    School: string;
+    Grad_Semester: string;
+    Grad_Year: number;
+    Bio: string;
+    Email: string;
+    Job_Performance?: [number, string];
+    Error?: string;
+}
+
+export const getStudent = async (id: string): Promise<StudentResponse> => {
     return await baseAPIGetCall('student/' + id);
 };
   
 export const updateStudent = async (data: any) => {
-    return await baseAPIPutCall(data, 'student/update');
+    try {
+        const response = await axios.put(`${baseApiURL}student/update`, data, {
+            headers: {
+                ...getAuthHeaders(),
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (err: any) {
+        return handleError(err.response?.data?.error || 'Update failed');
+    }
 };
 
 export const getResume = async (userID: string) => {
     return await baseAPIGetCall('resumes/' + userID);
+};
+
+export const updateResume = async (file: File, userId: string) => {
+    try {
+        const formData = new FormData();
+        formData.append('resume', file);
+        formData.append('userId', userId);
+        
+        const response = await axios.put(baseApiURL + "update-resume", formData, {
+            headers: {
+                ...getAuthHeaders(),
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        
+        return response.data;
+    } catch (err: any) {
+        return handleError(err.response?.data?.error || err.message);
+    }
 };
