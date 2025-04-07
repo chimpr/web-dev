@@ -95,6 +95,10 @@
   transform: translateY(-1px);
 }
 
+.student-button + .student-button {
+  margin-left: 1rem;
+}
+
 .bio-counter {
   font-size: 0.9rem;
   text-align: right;
