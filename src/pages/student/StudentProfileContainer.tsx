@@ -62,16 +62,8 @@ const StudentProfileContainer = (props: any) => {
             } catch (error) {
                 console.error('Data fetch failed:', error);
             }
-
-            const resumeResponse = await getResume(userId);
-            if (resumeResponse.data?.downloadUrl) {
-                const fileName = resumeResponse.data.downloadUrl.includes('/') 
-                    ? resumeResponse.data.downloadUrl.split('/').pop()
-                    : resumeResponse.data.downloadUrl;
-                
-                setResumeUrl(`/api/resumes/${fileName}`);
-            }
         };
+    
         fetchData();
     }, [props.loggedInUser]);
 
