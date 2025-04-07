@@ -75,10 +75,14 @@ const StudentProfileContainer = (props: any) => {
             LastName: studentData.lastName
         };
 
-        const response = await updateStudent(updateData);
-        if (response.data) {
-            setIsEditing(false);
-        }
+        updateStudent(updateData).then((res) => {
+            // handle data.
+            if (res['Error'] !== '') {
+                alert("Error: " + res['Error']);
+                return;
+            }
+            setIsEditing(false); 
+        });;
     };
 
     return (
