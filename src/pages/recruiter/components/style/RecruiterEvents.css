@@ -1,0 +1,25 @@
+.recruiter-events-wrapper {
+    display: flex;
+    width: fill;
+    height: fill;
+    flex-direction: row;
+    gap: 5em;
+    padding: 1em;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+}
+
+.recruiter-events {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+}
+
+.recruiter-events-header {
+    flex-direction: column;
+    font-size: 1em;
+    padding-left: 1em;
+    display: flex;
+    align-items: left;
+    padding-bottom: 1vh;
+}

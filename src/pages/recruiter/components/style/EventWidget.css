@@ -1,0 +1,36 @@
+.event-widget-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-width: 20vw;
+    max-width: 3vw; 
+    transition: 0.2s;
+}
+
+.event-widget-wrapper:hover {
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    transition: 0.5s;
+}
+
+.event-widget-header {
+    display: flex;
+    height: auto !important;
+    padding: 1em;
+    min-height: 15vh;
+    width: fill;
+    height: fill;
+}
+
+.event-widget-body {
+    height: fill;
+    width: fill;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    text-overflow: wrap;
+    justify-content: space-evenly;
+}
+
+.event-widget-body > h1 {
+    font-size: 2em;
+}
