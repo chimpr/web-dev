@@ -52,7 +52,7 @@ export default function RecruiterJobs(props: any) {
             }
             const jobs = res.jobs;
             jobs.forEach((job: any) => {
-                jList.push(new Job(job['_id'], job['Title'], 'Empty', job['Skills']));
+                jList.push(new Job(job['_id'], job['Title'], job['Description'], job['Skills']));
             });
         }).finally(() => {
             setJobList([...jList]);

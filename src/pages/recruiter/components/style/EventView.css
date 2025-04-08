@@ -7,7 +7,6 @@
 .view-event-body {
     display: flex;
     height: fill;
-    background-color: red;
 }
 
 .view-event-button {

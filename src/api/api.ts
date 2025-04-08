@@ -141,10 +141,11 @@ export const signUpRecruiter = async (linkedIn: string, company: string, firstNa
     return await baseAPIPostCall(data, "recruiter/signup");
 }
 
-export const createJob = async (title: string, skills: string[], type: string, recruiterID: string) => {
+export const createJob = async (title: string, description: string, skills: string[], type: string, recruiterID: string) => {
     const data = {
         "Title"         : title,
         "Skills"        : skills,
+        "Description"   : description,
         "Type"          : type,
         "Recruiter_ID"  : recruiterID
     };
@@ -159,11 +160,12 @@ export const createJob = async (title: string, skills: string[], type: string, r
  * @param type Job type
  * @returns 
  */
-export const updateJob = async(jobID: string, title: string, skills: string[], type: string) => {
+export const updateJob = async(jobID: string, title: string, description: string, skills: string[], type: string) => {
     const data = {
         "id"    : jobID,
         "Title" : title,
         "Skills": skills,
+        "Description" : description,
         "Type"  : type
     };
     return await baseAPIPutCall(data, "jobs/update");
