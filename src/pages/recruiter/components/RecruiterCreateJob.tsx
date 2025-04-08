@@ -46,7 +46,7 @@ export default function RecruiterCreateJob(props: any) {
         // determine if we're creating or editing a job.
         if (isEditingJob && editingJob !== undefined) {
             console.log(editingJob.jid)
-            updateJob(editingJob.jid, jobTitle, skills, type).then((res) => {
+            updateJob(editingJob.jid, jobTitle, description, skills, type).then((res) => {
                 console.log(res);
                 if (res['Error'] !== '') {
                     alert("Error: " + res['Error']);
@@ -56,7 +56,7 @@ export default function RecruiterCreateJob(props: any) {
                 props.setCreateJobVisible(false);
             })
         } else {
-            createJob(jobTitle, skills, type, props.loggedInUser?.uid).then((res) => {
+            createJob(jobTitle,description, skills, type, props.loggedInUser?.uid).then((res) => {
                 console.log(res);
                 if (res['Error'] !== '') {
                     alert("Error: " + res['Error']);

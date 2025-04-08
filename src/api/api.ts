@@ -4,6 +4,7 @@
 
 import axios, { AxiosError } from 'axios';
 import User from '../models/User';
+import { Dayjs } from 'dayjs';
 
 const baseApiURL = 'http://localhost:5001/api/';
 
@@ -140,10 +141,11 @@ export const signUpRecruiter = async (linkedIn: string, company: string, firstNa
     return await baseAPIPostCall(data, "recruiter/signup");
 }
 
-export const createJob = async (title: string, skills: string[], type: string, recruiterID: string) => {
+export const createJob = async (title: string, description: string, skills: string[], type: string, recruiterID: string) => {
     const data = {
         "Title"         : title,
         "Skills"        : skills,
+        "Description"   : description,
         "Type"          : type,
         "Recruiter_ID"  : recruiterID
     };
@@ -158,11 +160,12 @@ export const createJob = async (title: string, skills: string[], type: string, r
  * @param type Job type
  * @returns 
  */
-export const updateJob = async(jobID: string, title: string, skills: string[], type: string) => {
+export const updateJob = async(jobID: string, title: string, description: string, skills: string[], type: string) => {
     const data = {
         "id"    : jobID,
         "Title" : title,
         "Skills": skills,
+        "Description" : description,
         "Type"  : type
     };
     return await baseAPIPutCall(data, "jobs/update");
@@ -182,6 +185,24 @@ export const getTopCandidates = async (jobID: string, numToGet: number) => {
  */
 export const getJobs = async (user: User) => {
     return await(baseAPIGetCall("jobs/list/" + user.uid));
+}
+
+export const getEvents = async (user: User) => {
+    return await(baseAPIGetCall('event/list/' + user.uid));
+}
+
+export const createEvent = async (user: User, name: string, date: Dayjs) => {
+    const data = {
+        "Name" : name,
+        "Date" : date.format('MM-DD-YYYY'),
+        "Recruiter_ID" : user.uid
+    };
+
+    return await baseAPIPostCall(data, 'events/create');
+}
+
+export const deleteEvent = async (eid: string) => {
+    return await baseAPIDeleteCall('events/delete/' + eid);
 }
 
 export const signUpStudent = async (school: string, gradSemester: string, gradYear: number, bio: string, firstName: string, lastName: string, email: string,password: string) => {

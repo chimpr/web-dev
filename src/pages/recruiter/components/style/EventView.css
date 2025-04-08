@@ -1,0 +1,14 @@
+.view-event-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: fill;
+}
+
+.view-event-body {
+    display: flex;
+    height: fill;
+}
+
+.view-event-button {
+    justify-content: bottom;
+}

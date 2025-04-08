@@ -1,0 +1,24 @@
+.recruiter-create-event-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: fill;
+    width: fill;
+}
+
+.recruiter-create-event-txt-area {
+    display: flex;
+    overflow-y: scroll;
+    align-items: start;
+    flex-direction: column;
+    height: fill !important;
+    flex: 7;
+    justify-content: space-between;
+}
+
+.recruiter-create-event-btn-area {
+    display: flex;
+    flex: 1;
+    height: fill;
+    align-items: flex-end;
+    justify-content: space-between;
+}
