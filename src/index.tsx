@@ -9,6 +9,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+    <head>
+      <title>ChimpR</title>
+    </head>
     <App />
   </React.StrictMode>
 );
