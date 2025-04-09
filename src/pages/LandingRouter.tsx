@@ -87,6 +87,7 @@ export default function LandingRouter(props: any) {
                         <RecruiterLanding loggedInUser={loggedInUser} page={recruiterInitialPageType} setPage={setRecruiterInitialPageType}/>
                         :
                         <StudentProfileContainer 
+                            recruiterViewID={null}
                             loggedInUser={loggedInUser} 
                         />
                     }

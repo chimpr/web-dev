@@ -27,8 +27,7 @@ export default function RecruiterEvents(props: any) {
                 return;
             }
             res['events'].forEach((e: any) => {
-                console.log(e);
-                eventsList.push(new Event(e['_id'], e['Name'],e['Date']));
+                eventsList.push(new Event(e['_id'], e['Name'],e['Date'], e['Students']));
             });
         }).finally(() => {
               // Sort the eventsList by date
@@ -37,7 +36,6 @@ export default function RecruiterEvents(props: any) {
                 const dateB = dayjs(b.date);
                 return dateA.diff(dateB);
             });
-            console.log(eventsList);
             setEvents([...eventsList]);
         });
     }

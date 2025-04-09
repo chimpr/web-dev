@@ -6,8 +6,12 @@ import { Button, selectClasses } from '@mui/material';
 import CandidateWidget from './CandidateWidget';
 import PopupOverlay from '../../../components/PopupOverlay';
 import RecruiterCreateJob from './RecruiterCreateJob';
-import { deleteJob, getJobs, getTopCandidates } from '../../../api/api';
+import { deleteJob, getJobs, getStudent, getTopCandidates } from '../../../api/api';
 import JobSkillsWidget from './JobSkillsWidget';
+import Candidate from '../../../models/Candidate';
+import StudentProfileView from '../../student/StudentProfileView';
+import Student from '../../../models/Student';
+import StudentProfileContainer from '../../student/StudentProfileContainer';
 
 export default function RecruiterJobs(props: any) {
 
@@ -16,8 +20,9 @@ export default function RecruiterJobs(props: any) {
     const [createJobVisible, setCreateJobVisible] = useState(false);
     const [jobToEdit, setJobToEdit] = useState<Job>();
 
-    const [topCandidates, setTopCandidates] = useState([]);
+    const [topCandidates, setTopCandidates] = useState<Candidate[]>([]);
     const [gettingTopCandidates, setGettingTopCandidates] = useState(false);
+    const [viewingCandidate, setViewingCandidate] = useState<Candidate | null>(null);
     const NUM_TOP_CANDIDATES = 5;
     
     // example data is used for now.
@@ -36,12 +41,30 @@ export default function RecruiterJobs(props: any) {
         // update top candidates.
         getTopCandidates(selectedJob.jid, NUM_TOP_CANDIDATES).then((res) => {
             if (res['Error'] !== '') {
-                console.log("Error getting top candidates");
+                console.log("Error getting top candidates: " + res['Error']);
+                setGettingTopCandidates(false);
+                return;
             }
+
+            const tC: Candidate[] = [];
+
+            (res['Top_Candidates'] as any[]).forEach((c) => {
+                tC.push(new Candidate(c['Student_ID'], c['First_Name'], c['Last_Name'], c['Score']));
+            });
+            setTopCandidates([...tC]);
         }).finally(() => {
             setGettingTopCandidates(false);
         });
     }, [selectedJob]);
+
+    const SelectedCandidateView = () => {
+        return <div className='recruiter-student-view-wrapper-outer'>
+                    <div className='recruiter-student-view-wrapper-inner'>
+                            <StudentProfileContainer recruiterViewID={viewingCandidate?.cid}/>
+                    </div>
+                    <Button onClick={() => setViewingCandidate(null)}>Done</Button>
+               </div>
+    }
 
     const updateJobs = () => {
         const jList = new Array<Job>();
@@ -127,7 +150,7 @@ export default function RecruiterJobs(props: any) {
                                                 <p>No Candidates Found</p>
                                             :
                                                 topCandidates.map((c, i) => (
-                                                    <CandidateWidget key={i} name={c}/>
+                                                    <CandidateWidget setViewingCandidate={setViewingCandidate} key={i} candidate={c}/>
                                                 ))
                                     }
                                 </div>
@@ -135,6 +158,7 @@ export default function RecruiterJobs(props: any) {
                         </>
                     }
                 </div>
+                <PopupOverlay visible={viewingCandidate !== null} content={viewingCandidate === null ? <></> : <SelectedCandidateView/>}/>
                 <PopupOverlay visible={createJobVisible} content={<RecruiterCreateJob setJobToEdit={setJobToEdit} loggedInUser={props.loggedInUser} jobToEdit={jobToEdit} setCreateJobVisible={setCreateJobVisible}/>}/>
             </div>);
 }

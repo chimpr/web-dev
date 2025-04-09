@@ -6,6 +6,7 @@ import User, { Role } from '../../models/User';
 
 const StudentProfileContainer = (props: any) => {
     const [isEditing, setIsEditing] = useState(false);
+    const recruiterViewID = props.recruiterViewID;
     const [studentData, setStudentData] = useState<Student>({
         uid: '',
         role: Role.STUDENT,
@@ -23,10 +24,9 @@ const StudentProfileContainer = (props: any) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!props.loggedInUser) return;
-    
+            if (!props.loggedInUser && (recruiterViewID == null || recruiterViewID === '')) return;
             try {
-                const studentResponse = await getStudent(props.loggedInUser.uid);
+                const studentResponse = await getStudent(recruiterViewID !== null && recruiterViewID !== '' ? recruiterViewID : props.loggedInUser.uid);
                 if (studentResponse.Error) {
                     console.error('Student fetch error:', studentResponse.Error);
                     return;
@@ -48,7 +48,7 @@ const StudentProfileContainer = (props: any) => {
                     studentResponse.Job_Performance || [0, "No reviews yet"]
                 ));
 
-                const resumeResponse = await getResume(props.loggedInUser.uid);
+                const resumeResponse = await getResume(recruiterViewID !== null && recruiterViewID !== '' ? recruiterViewID : props.loggedInUser.uid);
                 if (resumeResponse.Error) {
                     console.error('Resume fetch error:', resumeResponse.Error);
                     return;
@@ -65,7 +65,7 @@ const StudentProfileContainer = (props: any) => {
         };
     
         fetchData();
-    }, [props.loggedInUser]);
+    }, []);
 
     const handleSave = async () => {
         try {
@@ -115,8 +115,8 @@ const StudentProfileContainer = (props: any) => {
             onDataChange={setStudentData}
             resumeUrl={resumeUrl || undefined}
             setResumeUrl={setResumeUrl} 
-            recruiterView={false}
-            userId={props.loggedInUser?.uid}
+            recruiterView={recruiterViewID !== null && recruiterViewID !== ''}
+            userId={(recruiterViewID !== null && recruiterViewID !== '') ? recruiterViewID : props.loggedInUser?.uid}
         />
     );
 };

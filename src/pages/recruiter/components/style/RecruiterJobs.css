@@ -68,6 +68,17 @@
     flex-direction: column;
 }
 
+.recruiter-student-view-wrapper-inner {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+.recruiter-student-view-wrapper-outer {
+    display: flex;
+    flex-direction: column;
+    max-height: fill !important;
+}
+
 /* HTML: <div class="loader"></div> */
 .loader {    
     width: 70px;
