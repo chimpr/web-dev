@@ -7,6 +7,9 @@
 .view-event-body {
     display: flex;
     height: fill;
+    flex-direction: column;
+    flex-wrap: wrap;
+    overflow-y: scroll;
 }
 
 .view-event-button {

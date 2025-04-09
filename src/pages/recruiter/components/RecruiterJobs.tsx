@@ -150,7 +150,7 @@ export default function RecruiterJobs(props: any) {
                                                 <p>No Candidates Found</p>
                                             :
                                                 topCandidates.map((c, i) => (
-                                                    <CandidateWidget setViewingCandidate={setViewingCandidate} key={i} candidate={c}/>
+                                                    <CandidateWidget showScore setViewingCandidate={setViewingCandidate} key={i} candidate={c}/>
                                                 ))
                                     }
                                 </div>

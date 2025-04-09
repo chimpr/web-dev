@@ -8,17 +8,29 @@ import RecruiterCreateEvent from './RecruiterCreateEvent';
 import { getEvents } from '../../../api/api';
 import dayjs from 'dayjs';
 import EventView from './EventView';
+import Candidate from '../../../models/Candidate';
+import StudentProfileContainer from '../../student/StudentProfileContainer';
 
 export default function RecruiterEvents(props: any) {
 
     const [events,setEvents] = useState<Event[]>([]);
     const [createEventVisible, setCreateEventVisible] = useState(false);
     const [eventView, setEventView] = useState<Event | null>(null);
-    
+    const [viewingCandidate, setViewingCandidate] = useState<Candidate | null>(null);
+
     useEffect(() => {
         //  load in recruiter events.
         LoadEvents();
     }, [])
+
+    const SelectedCandidateView = () => {
+        return <div className='recruiter-student-view-wrapper-outer'>
+                    <div className='recruiter-student-view-wrapper-inner'>
+                            <StudentProfileContainer recruiterViewID={viewingCandidate?.cid}/>
+                    </div>
+                    <Button onClick={() => setViewingCandidate(null)}>Done</Button>
+               </div>
+    }
 
     const LoadEvents = () => {
         const eventsList: Event[] = [];
@@ -27,7 +39,8 @@ export default function RecruiterEvents(props: any) {
                 return;
             }
             res['events'].forEach((e: any) => {
-                eventsList.push(new Event(e['_id'], e['Name'],e['Date'], e['Students']));
+                console.log(e);
+                eventsList.push(new Event(e['_id'], e['Name'],e['Date'], e['Students'] instanceof Array ? e['Students'] : []));
             });
         }).finally(() => {
               // Sort the eventsList by date
@@ -61,6 +74,11 @@ export default function RecruiterEvents(props: any) {
                 }
             </div>
             <PopupOverlay visible={createEventVisible} content={<RecruiterCreateEvent loggedInUser={props.loggedInUser} LoadEvents={LoadEvents} setCreateEventVisible={setCreateEventVisible}/>}/>
-            <PopupOverlay visible={eventView !== null} content={<EventView setEventView={setEventView} event={eventView}/>}/>
+            <PopupOverlay visible={eventView !== null} content={
+                viewingCandidate !== null ? 
+                <SelectedCandidateView/>
+                :
+                <EventView setViewingCandidate={setViewingCandidate} setEventView={setEventView} event={eventView}/>
+                }/>
          </div>
 }

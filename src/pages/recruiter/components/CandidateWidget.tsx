@@ -10,6 +10,6 @@ export default function CandidateWidget(props: any) {
 
     return <button onClick={() => handleCandidateSelect()}  className="candidate-widget-wrapper">
                 <p>{candidate.firstName} {candidate.lastName}</p>
-                <p>{candidate.score}% Match</p>
+                <p style={{display: props.showScore !== undefined && props.showScore ? '' : 'none'}}>{candidate.score}% Match</p>
             </button>
 }

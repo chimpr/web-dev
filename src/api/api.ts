@@ -6,7 +6,7 @@ import axios, { AxiosError } from 'axios';
 import User from '../models/User';
 import { Dayjs } from 'dayjs';
 
-const baseApiURL = 'http://localhost:5001/api/';
+const baseApiURL = 'http://chimprecruiter.online:5001/api/';
 
 // Authorization
 const getAuthHeaders = () => {

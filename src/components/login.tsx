@@ -99,12 +99,12 @@ export default function Login(props: any) {
                         <TextField onChange={(t) => setPassword(t.target.value)} required id="password-field" style={{width: '20vw'}} type={showPassword ? "" : "password"} label="Password" />
                         <p style={{display: (unPwIncorr ? "" : "none"), color: 'red', margin: '0px'}}>Incorrect Username or Password</p>
                         <FormControlLabel label="Show Password" control={<Checkbox onChange={() => {setShowPassword(!showPassword)}}/>}/>
+                        <Button>Forgot Password?</Button>
                     </div>
 
                     <Button disabled={username === "" || password === "" || emailInvalid} onClick={handleLoginBtnClick} variant='contained' style={{width: '20vw'}}>Login</Button>
                     
                     {/* Or Sign Up */}
-                    <p>Don't have an account?</p> 
                     <Button disabled={signUpCovered} onClick={() => {setSignUpCovered(true)}}>Sign Up</Button>
                 </div>
             </div>
