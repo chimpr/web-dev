@@ -184,7 +184,7 @@ const StudentProfileView: React.FC<StudentProfileViewProps> = ({
                         {resumeUrl && (
                             <iframe
                                 title="resume-preview"
-                                src={`${'http://localhost:5001'}${resumeUrl}`}
+                                src={`${'http://chimprecruiter.online:5001'}${resumeUrl}`}
                                 className="resume-iframe"
                                 key={resumeUrl}
                             />
